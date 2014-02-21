@@ -9,6 +9,7 @@
 
 #include <assert.h>
 #include <math.h>
+#include <algorithm>
 
 namespace Geometry
 {
@@ -32,6 +33,11 @@ namespace Geometry
         // explictly uninitialised construction
         explicit VectorN(const Uninitialised&)
         { }
+        
+        explicit VectorN(const Scalar data[N])
+        {
+        	std::copy(data, data+N, mData);
+        }
         
         //type conversion constructor
         template< typename OtherScalar >

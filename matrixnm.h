@@ -35,7 +35,12 @@ namespace Geometry
         
         // explictly uninitialised construction
         explicit MatrixNM(const Uninitialised&)
+        	: mData(uninitialised)
         { }
+        
+        explicit MatrixNM(const Scalar data[N*M])
+        	: mData(data)
+		{ }
         
         //type conversion constructor
         template< typename OtherScalar >
@@ -49,10 +54,10 @@ namespace Geometry
         
         // simple accessors
         void Set (size_t n, size_t m, Scalar value);
-        // Scalar& operator[] (size_t offset);
+        Scalar* operator[] (size_t n);
+        
         Scalar Get (size_t n, size_t m) const;
-
-        // const Scalar& operator[] (size_t offset)  const;
+        const Scalar* operator[] (size_t n)  const;
         
         // distance and length
         // todo !!! not using get/compute naming convention
@@ -76,8 +81,8 @@ namespace Geometry
         //Scalar DotProduct( const VectorN& lhs, const VectorN& rhs );
         
     // private:
-            //Scalar mData[N*M];
-            VectorN<Scalar,N*M> mData;
+            // Scalar mData[N*M];
+	        VectorN<Scalar,N*M> mData;
     };
 
     //
@@ -149,12 +154,12 @@ namespace Geometry
         mData[n*M+m]=value;
     }
     
-    //template< typename Scalar, size_t N, size_t M >
-    //Scalar& MatrixNM<Scalar, N, M>::operator[] (size_t offset) 
-    //{
-    //    assert( offset<N );
-    //    return mData[offset];
-    //}
+    template< typename Scalar, size_t N, size_t M >
+    Scalar* MatrixNM<Scalar, N, M>::operator[] (size_t n) 
+    {
+        assert( n<N );
+        return &mData[n*M];
+    }
 
     template< typename Scalar, size_t N, size_t M >
     Scalar MatrixNM<Scalar, N, M>::Get(size_t n, size_t m) const 
@@ -164,13 +169,12 @@ namespace Geometry
         return mData[n*M+m];
     }
     
-    //template< typename Scalar, size_t N, size_t M >
-    //const Scalar& MatrixNM<Scalar, N, M>::operator[] (size_t offset)  const 
-    //{
-    //    assert( n<N );
-    //    assert( m<M );
-	//	return  mData[n*M+m];
-    //}
+    template< typename Scalar, size_t N, size_t M >
+    const Scalar* MatrixNM<Scalar, N, M>::operator[] (size_t n)  const 
+    {
+        assert( n<N );
+		return &mData[n*M];
+    }
     
     template< typename Scalar, size_t N, size_t M >
     MatrixNM<Scalar, N, M>& MatrixNM<Scalar, N, M>::operator = (const MatrixNM& rhs) 
