@@ -1,7 +1,9 @@
 #include "../matrixn.h"
 
+using namespace Geometry;
+	
 int tests_passed = 0;
-#define TEST( condition ) if (!condition) { printf("failed: %s\n", #condition); } else {tests_passed++;} 
+#define TEST( condition ) if (!(condition)) { printf("failed: %s\n", #condition); } else {tests_passed++;} 
 
 void Flush(const char* name)
 {
@@ -20,24 +22,12 @@ void TestLayout()
 	Flush("TestLayout");
 }
 
-int main()
+void TestTranslate()
 {
-	using namespace Geometry;
+	int dx=1;
+	int dy=2;	
+	int dz=4;
 	
-	TestLayout();
-	
-	MatrixN<int,4> test(uninitialised);
-	
-	int dx=10;
-	int dy=0;	
-	int dz=0;
-	
-	// in OGL format
-	// x.x x.y x.z 0
-	// y.x y.y y.z 0
-	// z.x z.y z.z 0
-	// p.x p.y p.z 1
-
 	const int data[4*4] = {
 		1, 0, 0, 0,
 		0, 1, 0, 0,
@@ -50,12 +40,32 @@ int main()
 	);
 	
 	VectorN<int,4> v(uninitialised);
-	v[2]=v[1]=v[0]=10;
+	v[0]=8; v[1]=16; v[2]=32;
 	v[3]=1;
 	
 	VectorN<int,4> v2 = t * v;
+	TEST( v2[0]==v[0]+dx );
+	TEST( v2[1]==v[1]+dy );
+	TEST( v2[2]==v[2]+dz );
+			
+	Flush("TestTranslate");
+}
+
+int main()
+{	
+	TestLayout();
+	TestTranslate();
 	
-	printf("%i,%i,%i,%i\n", v2[0], v2[1], v2[2], v2[3]);
+	MatrixN<int,4> test(uninitialised);
+	
+
+	
+	// in OGL format
+	// x.x x.y x.z 0
+	// y.x y.y y.z 0
+	// z.x z.y z.z 0
+	// p.x p.y p.z 1
+	
 	
 	return 0;
 }

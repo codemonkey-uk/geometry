@@ -50,8 +50,8 @@ namespace Geometry
 		VectorN<Scalar, N> r(uninitialised);
         for (int n=0;n!=N;++n)
         {
-        	r[n]=0;
-        	for (int m=0;m!=N;++m)
+        	r[n]=lhs[0][n]*rhs[0];
+        	for (int m=1;m!=N;++m)
         		r[n] += lhs[m][n]*rhs[m];
         }
         return r;
