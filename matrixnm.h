@@ -1,8 +1,5 @@
-#ifndef MATRIXN_H_INCLUDED
-#define MATRIXN_H_INCLUDED
-
-// notes:  use of double for certain maths functionality
-// - may want to go via arbitary precision maths codepath
+#ifndef MATRIXNM_H_INCLUDED
+#define MATRIXNM_H_INCLUDED
 
 #include "geometry_uninitialised.h"
 #include "base_maths.h"
@@ -26,12 +23,12 @@ namespace Geometry
         const static size_t sRows = M;
         
         typedef Scalar ScalarType;
-        typedef MatrixNM<Scalar,N, M> VectorType;
+        typedef MatrixNM<Scalar,N, M> MatrixType;
         typedef MatrixNM<Scalar,N, M> BaseType;
         
         //get the number of elements / dimentions for this type
         static
-        Vector2d<Scalar> GetSize();
+        Vector2d<int> GetSize();
         
         // explictly uninitialised construction
         explicit MatrixNM(const Uninitialised&)
@@ -59,13 +56,6 @@ namespace Geometry
         Scalar Get (size_t n, size_t m) const;
         const Scalar* operator[] (size_t n)  const;
         
-        // distance and length
-        // todo !!! not using get/compute naming convention
-        //Scalar LengthSquare() const;
-        //Scalar Length() const;
-        //Scalar DistanceSquare(const VectorN& rhs) const;
-        //Scalar Distance(const VectorN& rhs) const;
-        
         // binary operators
         MatrixNM& operator = (const MatrixNM& rhs);
         MatrixNM& operator += (const MatrixNM& rhs);
@@ -74,11 +64,7 @@ namespace Geometry
         MatrixNM& operator *= (const MatrixNM rhs);
         bool operator == (const MatrixNM& rhs) const;
         bool operator != (const MatrixNM& rhs) const;
-        
-        //void Normalise();
-        
-        //static 
-        //Scalar DotProduct( const VectorN& lhs, const VectorN& rhs );
+
         
     // private:
             // Scalar mData[N*M];
@@ -100,20 +86,6 @@ namespace Geometry
     MatrixNM<Scalar, N, M> operator- (MatrixNM<Scalar, N, M> lhs, const MatrixNM<Scalar, N, M>& rhs)
     {
         lhs -= rhs;
-        return lhs;
-    }
-    
-    template<typename Scalar, size_t N, size_t M>
-    MatrixNM<Scalar, N, M> operator/ (MatrixNM<Scalar, N, M> lhs, const Scalar rhs)
-    {
-        lhs /= rhs;
-        return lhs;
-    }
-
-    template<typename Scalar, size_t N, size_t M>
-    MatrixNM<Scalar, N, M> operator* (MatrixNM<Scalar, N, M> lhs, const Scalar rhs)
-    {
-        lhs *= rhs;
         return lhs;
     }
     
@@ -141,9 +113,9 @@ namespace Geometry
 	*/
     
     template< typename Scalar, size_t N, size_t M >
-    Vector2d<Scalar> MatrixNM<Scalar, N, M>::GetSize() 
+    Vector2d<int> MatrixNM<Scalar, N, M>::GetSize() 
     {
-        return Vector2d<Scalar>(N,M);
+        return Vector2d<int>(N,M);
     }
     
     template< typename Scalar, size_t N, size_t M >
