@@ -31,6 +31,10 @@ namespace Geometry
         explicit MatrixN(const Scalar data[N*N])
         	: BaseType(data)
 		{ }
+		
+		MatrixN(std::initializer_list<Scalar> data) 
+			: BaseType(data)
+		{ }
         
         //type conversion constructor
         template< typename OtherScalar >

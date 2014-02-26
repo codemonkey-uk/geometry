@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <math.h>
 #include <algorithm>
+#include <initializer_list>
 
 namespace Geometry
 {
@@ -38,6 +39,23 @@ namespace Geometry
         {
         	std::copy(data, data+N, mData);
         }
+        
+        VectorN(std::initializer_list<Scalar> data) 
+        { 
+			assert(data.size()==N); // "Exactly N elements required."
+			std::copy(data.begin(), data.end(), mData); 
+		}
+        
+        // building a vector from a smaller vector and adding a component
+        VectorN( const VectorN<Scalar, N-1>& rhs, Scalar nth ) 
+		{
+			size_t i=0;
+			for (;i<N-1;++i)
+			{
+				mData[i] = rhs[i];
+			}
+			mData[i] = nth;
+		}
         
         //type conversion constructor
         template< typename OtherScalar >

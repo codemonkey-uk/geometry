@@ -38,6 +38,10 @@ namespace Geometry
         explicit MatrixNM(const Scalar data[N*M])
         	: mData(data)
 		{ }
+		
+		MatrixNM(std::initializer_list<Scalar> data) 
+			: mData(data)
+		{ }
         
         //type conversion constructor
         template< typename OtherScalar >
