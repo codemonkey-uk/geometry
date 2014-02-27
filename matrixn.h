@@ -22,7 +22,13 @@ namespace Geometry
         typedef Scalar ScalarType;
         typedef MatrixN<Scalar,N> MatrixType;
         typedef MatrixNM<Scalar,N, N> BaseType;
-                
+    	
+    	MatrixN()
+    		: BaseType(uninitialised)
+        { 
+			BecomeIdentity();
+        } 
+        
         // explictly uninitialised construction
         explicit MatrixN(const Uninitialised&)
         	: BaseType(uninitialised)
@@ -41,7 +47,40 @@ namespace Geometry
 		MatrixN<Scalar,N>( const MatrixN<OtherScalar, N>& rhs )
 			: BaseType(rhs)
 		{ }
-                
+        
+        void BecomeIdentity()
+        {
+        	int i=0;
+        	this->mData[i++]=1;
+        	while(i<N*N)
+        	{
+        		for(int j=0;j!=N;++j)
+        			this->mData[i++]=0;
+        		this->mData[i++]=1;
+        	}
+        }
+        
+        void Scale(VectorN<Scalar, N> s)
+        {
+        	int i=0, a=0;
+        	this->mData[i++]=s[a++];
+        	while(i<N*N)
+        	{
+        		for(int j=0;j!=N;++j)
+        			this->mData[i++]=0;
+        		this->mData[i++]=s[a++];
+        	}
+        } 
+        
+        void Scale(VectorN<Scalar, N-1> s)
+        {
+			Scale(VectorN<Scalar, N>(s, 1));
+        } 
+        
+        void Scale(Scalar s)
+        {
+			Scale(VectorN<Scalar, N-1>(s));
+        } 
     };
 
     //

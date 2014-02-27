@@ -4,7 +4,10 @@
 using namespace Geometry;
 	
 int tests_passed = 0;
-#define TEST( condition ) if (!(condition)) { printf("failed: %s\n", #condition); } else {tests_passed++;} 
+int tests_failed = 0;
+#define TEST( condition ) if (!(condition)) { \
+	printf("failed: %s\n", #condition); tests_failed++; \
+	} else { tests_passed++; } 
 
 void Flush(const char* name)
 {
@@ -30,22 +33,16 @@ void TestTranslate()
 	int dz=4;
 	
 	// translation matrix
-	const int data[4*4] = {
+	MatrixN<int,4> t({
 		1, 0, 0, 0,
 		0, 1, 0, 0,
 		0, 0, 1, 0,
 		dx, dy, dz, 1
-	};
-	
-	MatrixN<int,4> t(
-		data
-	);
-	
-	VectorN<int,4> v(uninitialised);
-	v[0]=8; v[1]=16; v[2]=32;
+	});
 
-	// position vector
-	v[3]=1;
+	// position vector	
+	VectorN<int,4> v({8,16,32,1});
+
 	VectorN<int,4> v2 = t * v;
 	
 	// should be translated
@@ -65,27 +62,60 @@ void TestTranslate()
 	Flush("TestTranslate");
 }
 
-template< int N >
-class T {
-	public:
-	T(const int data[N]) { std::copy(data, data+N, mD); }
-	T(std::initializer_list<int> data) { 
-		assert(data.size()==N); // "Exactly N elements required."
-		std::copy(data.begin(), data.end(), mD); 
-	}
-	int mD[N];
-};
+void TestIdentity()
+{
+	// two ways to get identity matrix
+	
+	// manually, create uninitialised, then call BecomeIdentity
+	MatrixN<int,4> test1(uninitialised);
+	test1.BecomeIdentity();
+	
+	// or default constructor
+	MatrixN<int,4> test2;
 
-T<2> t {1,2};
+	for (int n=0;n!=4;n++)
+	{
+		for (int m=0;m!=4;m++)
+		{
+			TEST( test1[n][m]==(n==m) );
+			TEST( test2[n][m]==(n==m) );			
+		}
+	}
+	
+	// check that identity * vector leaves vector unmodified
+	VectorN<int,4> v({8,16,32,1});
+	TEST( test2 * v == v );
+	
+	Flush("TestIdentity");
+}
+
+void TestScale()
+{
+	// vector we will scale for the tests
+	const VectorN<int,4> v({2,4,8,1});
+	// v*2, note w should not be scaled!
+	const VectorN<int,4> v2({2*2,4*2,8*2,1});
+	// v*v, note w should not be scaled!
+	const VectorN<int,4> v_sq({2*2,4*4,8*8,1});
+	
+	MatrixN<int,4> test1;
+	test1.Scale(2);
+	TEST( test1 * v == v2 );
+	
+	MatrixN<int,4> test2;
+	test2.Scale(v);
+	TEST( test2 * v == v_sq );
+	
+	Flush("TestScale");
+}
+
 
 int main()
 {	
 	TestLayout();
 	TestTranslate();
+	TestScale();
 	
-	MatrixN<int,4> test(uninitialised);
-	VectorN<int,4> v(Vector3d<float>(1,2,3),1);
-
 	// Geometry::MatrixN<int,4> matrix11({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 });
 	// in OGL format
 	// x.x x.y x.z 0
@@ -93,6 +123,6 @@ int main()
 	// z.x z.y z.z 0
 	// p.x p.y p.z 1
 	
-	
-	return 0;
+	printf("%i failed\n", tests_failed);
+	return tests_failed;
 }

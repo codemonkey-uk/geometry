@@ -35,6 +35,11 @@ namespace Geometry
         explicit VectorN(const Uninitialised&)
         { }
         
+        explicit VectorN(Scalar d)
+        {
+        	std::fill(mData, mData+N, d);
+        }
+        
         explicit VectorN(const Scalar data[N])
         {
         	std::copy(data, data+N, mData);
