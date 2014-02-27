@@ -109,12 +109,28 @@ void TestScale()
 	Flush("TestScale");
 }
 
+void TestTranspose()
+{
+	Geometry::MatrixN<int,4> matrixA = { 
+		0, 1, 2, 3, 
+		4, 5, 6, 7, 
+		8, 9, 10, 11, 
+		12, 13, 14, 15 
+	};
+	matrixA.Transpose();
+	for (int n=0;n!=4;n++)
+	{
+		printf("%i,%i,%i,%i\n", matrixA[n][0],matrixA[n][1],matrixA[n][2],matrixA[n][3]);
+	}
+	Flush("TestTranspose");
+}
 
 int main()
 {	
 	TestLayout();
 	TestTranslate();
 	TestScale();
+	TestTranspose();
 	
 	// Geometry::MatrixN<int,4> matrix11({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 });
 	// in OGL format

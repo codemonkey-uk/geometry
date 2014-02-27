@@ -80,7 +80,18 @@ namespace Geometry
         void Scale(Scalar s)
         {
 			Scale(VectorN<Scalar, N-1>(s));
-        } 
+        }
+        
+        void Transpose()
+        {
+        	for (int n=0;n!=N;++n)
+        	{
+				for (int m=n+1;m!=N;++m)
+				{
+					std::swap( (*this)[n][m], (*this)[m][n] );
+				}
+        	}
+        }
     };
 
     //
