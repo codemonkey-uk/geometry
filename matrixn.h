@@ -34,6 +34,10 @@ namespace Geometry
         	: BaseType(uninitialised)
         { }
         
+        MatrixN(const BaseType& rhs)
+        	: BaseType(rhs)
+        { }
+        
         explicit MatrixN(const Scalar data[N*N])
         	: BaseType(data)
 		{ }
@@ -43,10 +47,10 @@ namespace Geometry
 		{ }
         
         //type conversion constructor
-        template< typename OtherScalar >
-		MatrixN<Scalar,N>( const MatrixN<OtherScalar, N>& rhs )
-			: BaseType(rhs)
-		{ }
+        //template< typename OtherScalar >
+		//MatrixN<Scalar,N>( const MatrixN<OtherScalar, N>& rhs )
+		//	: BaseType(rhs)
+		//	{ }
         
         void BecomeIdentity()
         {
@@ -92,6 +96,17 @@ namespace Geometry
 				}
         	}
         }
+        /*
+        void Pow(int i)
+        {
+			MatrixN a;//identity
+			while(i>0){
+				if(i%2) a = a * *this;
+				i=i/2;
+				m=m*m;
+			}        
+        }
+        */
     };
 
     //

@@ -3,6 +3,8 @@
 
 using namespace Geometry;
 	
+// --- TEST HELPERS ---
+
 int tests_passed = 0;
 int tests_failed = 0;
 #define TEST( condition ) if (!(condition)) { \
@@ -11,9 +13,19 @@ int tests_failed = 0;
 
 void Flush(const char* name)
 {
-	printf("%s: %i passed\n", name, tests_passed);
+	printf("%s:\t%i passed\n", name, tests_passed);
 	tests_passed = 0;
 }
+
+void DebugPrint(Geometry::MatrixN<int,4>& matrix)
+{
+	for (int n=0;n!=4;n++)
+	{
+		printf("%i,%i,%i,%i\n", matrix[n][0],matrix[n][1],matrix[n][2],matrix[n][3]);
+	}
+}
+
+// --- TESTS ---
 
 void TestLayout()
 {
@@ -111,18 +123,56 @@ void TestScale()
 
 void TestTranspose()
 {
-	Geometry::MatrixN<int,4> matrixA = { 
+	const Geometry::MatrixN<int,4> matrixA = { 
 		0, 1, 2, 3, 
 		4, 5, 6, 7, 
 		8, 9, 10, 11, 
 		12, 13, 14, 15 
 	};
-	matrixA.Transpose();
-	for (int n=0;n!=4;n++)
-	{
-		printf("%i,%i,%i,%i\n", matrixA[n][0],matrixA[n][1],matrixA[n][2],matrixA[n][3]);
-	}
+	Geometry::MatrixN<int,4> matrixB = matrixA;
+	matrixB.Transpose();
+
+	TEST( matrixA[0][0]	== matrixB[0][0] );
+	TEST( matrixA[1][0]	== matrixB[0][1] );
+	TEST( matrixA[2][0]	== matrixB[0][2] );
+	TEST( matrixA[3][0]	== matrixB[0][3] );	
+	TEST( matrixA[0][1]	== matrixB[1][0] );
+	TEST( matrixA[1][1]	== matrixB[1][1] );
+	TEST( matrixA[2][1]	== matrixB[1][2] );
+	TEST( matrixA[3][1]	== matrixB[1][3] );	
+	TEST( matrixA[0][2]	== matrixB[2][0] );
+	TEST( matrixA[1][2]	== matrixB[2][1] );
+	TEST( matrixA[2][2]	== matrixB[2][2] );
+	TEST( matrixA[3][2]	== matrixB[2][3] );	
+	TEST( matrixA[0][3]	== matrixB[3][0] );
+	TEST( matrixA[1][3]	== matrixB[3][1] );
+	TEST( matrixA[2][3]	== matrixB[3][2] );
+	TEST( matrixA[3][3]	== matrixB[3][3] );	
+			
 	Flush("TestTranspose");
+}
+
+void TestMultiply()
+ {
+	int a= 0, b= 1, c= 2, d= 3, 
+		e= 4, f= 5, g= 6, h= 7, 
+		i= 8, j= 9, k=10, l=11, 
+		m=12, n=13, o=14, p=15;
+	// int q=20, r=21, s=22, t=23, u=24, v=25, w=26, x=27;
+	Geometry::MatrixN<int,4> matrixA = { 
+		0, 1, 2, 3, 
+		4, 5, 6, 7, 
+		8, 9, 10, 11, 
+		12, 13, 14, 15 
+	};	
+	Geometry::MatrixN<int,4> matrixB = matrixA*matrixA;
+	
+	int a2 = a*a + b*e + c*i + d*m;
+	TEST( matrixB[0][0] == a2 );
+	int b2 = a*a + b*f + c*j + d*n;
+	TEST( matrixB[0][1] == b2 );
+	int j2 = i*b + j*f + k*j + l*n;
+	TEST( matrixB[2][1] == j2 );
 }
 
 int main()
@@ -131,6 +181,7 @@ int main()
 	TestTranslate();
 	TestScale();
 	TestTranspose();
+	TestMultiply();
 	
 	// Geometry::MatrixN<int,4> matrix11({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 });
 	// in OGL format
@@ -139,6 +190,6 @@ int main()
 	// z.x z.y z.z 0
 	// p.x p.y p.z 1
 	
-	printf("%i failed\n", tests_failed);
+	printf("=> %i failed%c\n", tests_failed, tests_failed==0 ? '!' : '.');
 	return tests_failed;
 }

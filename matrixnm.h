@@ -64,8 +64,8 @@ namespace Geometry
         MatrixNM& operator = (const MatrixNM& rhs);
         MatrixNM& operator += (const MatrixNM& rhs);
         MatrixNM& operator -= (const MatrixNM& rhs);
-        MatrixNM& operator /= (const MatrixNM rhs);
-        MatrixNM& operator *= (const MatrixNM rhs);
+        //MatrixNM& operator /= (const Scalar rhs);
+        //MatrixNM& operator *= (const Scalar rhs);
         bool operator == (const MatrixNM& rhs) const;
         bool operator != (const MatrixNM& rhs) const;
 
@@ -100,6 +100,22 @@ namespace Geometry
 		return arg;
     }
 
+    template<typename Scalar, size_t N, size_t M>
+    MatrixNM<Scalar, N, M> operator* (MatrixNM<Scalar, N, M> lhs, const MatrixNM<Scalar, N, M>& rhs)
+    {
+    	MatrixNM<Scalar, N, M> r(uninitialised);
+        for (int n=0;n!=N;++n)
+        {
+        	for (int m=0;m!=M;++m)
+        	{
+				r[m][n]=lhs[0][n]*rhs[m][0];
+				for (int rm=1;rm!=N;++rm)
+					r[m][n] += lhs[rm][n]*rhs[m][rm];
+			}
+        }
+        return r;
+    }
+    
     //
     // Class Implementation
     // (in header as is a template)
