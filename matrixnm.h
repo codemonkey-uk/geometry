@@ -108,13 +108,13 @@ namespace Geometry
 	// lhs * rhs, 
 	// LN == RM == LN_RM
 	// Result of the multiplication has the same matrix dimensions as RHS
-    template<typename Scalar, size_t LN, size_t LM, size_t RM, size_t RN>
-    MatrixNM<Scalar, RN, RM> operator* (
-    	const MatrixNM<Scalar, LN, LM>& lhs, 
-    	const MatrixNM<Scalar, RN, RM>& rhs)
+    template<typename Scalar, size_t LN, size_t LM_RN, size_t RM>
+    MatrixNM<Scalar, LM_RN, RM> operator* (
+    	const MatrixNM<Scalar, LN, LM_RN>& lhs, 
+    	const MatrixNM<Scalar, LM_RN, RM>& rhs)
     {
-    	MatrixNM<Scalar, RN, RM> r(uninitialised);
-    	for (int rn=0;rn!=RN;++rn)
+    	MatrixNM<Scalar, LM_RN, RM> r(uninitialised);
+    	for (int rn=0;rn!=LM_RN;++rn)
         {
         	for (int rm=0;rm!=RM;++rm)
         	{
@@ -122,7 +122,7 @@ namespace Geometry
         		int rhs_m=rm;
         		
         		r[rn][rm] = lhs[lhs_n][0]*rhs[0][rhs_m];
-        		for(int nm=1;nm!=RN;++nm)
+        		for(int nm=1;nm!=LM_RN;++nm)
         		{
         			r[rn][rm] += lhs[lhs_n][nm]*rhs[nm][rhs_m];
         		}

@@ -159,14 +159,15 @@ void TestMultiply()
 		i= 8, j= 9, k=10, l=11, 
 		m=12, n=13, o=14, p=15;
 	int q=20, r=21, s=22, t=23, u=24, v=25, w=26, x=27;
-	Geometry::MatrixN<int,4> matrixA = { 
+	const Geometry::MatrixN<int,4> matrixA = { 
 		0, 1, 2, 3, 
 		4, 5, 6, 7, 
 		8, 9, 10, 11, 
 		12, 13, 14, 15 
 	};	
-	Geometry::MatrixN<int,4> matrixB = matrixA*matrixA;
 	
+	// 4x4*4x4
+	Geometry::MatrixN<int,4> matrixB = matrixA*matrixA;
 	int a2 = a*a + b*e + c*i + d*m;
 	TEST( matrixB[0][0] == a2 );
 	int b2 = a*a + b*f + c*j + d*n;
@@ -174,17 +175,32 @@ void TestMultiply()
 	int j2 = i*b + j*f + k*j + l*n;
 	TEST( matrixB[2][1] == j2 );
 	
-	Geometry::MatrixNM<int,4,2> matrixC = {
+	const Geometry::MatrixNM<int,4,2> matrixC = {
 		q, r,
 		s, t,
 		u, v, 
 		w, x
 	};
 	
+	// 4x4 * 4x2
 	Geometry::MatrixNM<int,4,2> matrixD = matrixA * matrixC;
 	TEST( matrixD[0][0] == a*q + b*s + c*u + d*w );
 	TEST( matrixD[0][1] == a*r + b*t + c*v + d*x );	
 	
+	const Geometry::MatrixNM<int,2,4> matrixE = {
+		a, b, c, d,
+		e, f, g, h
+	};
+	
+	Geometry::MatrixNM<int,2,4> matrixF = matrixC * matrixE;
+	TEST( matrixF[0][0] == q*a + r*e );
+	
+	// 2x4 * 4x2 runtime error :(
+	// matrixE * matrixC;
+	
+	// 4x2 * 4*4 does not compile: 
+	// matrixC * matrixA;
+		
 	Flush("TestMultiply");
 }
 
