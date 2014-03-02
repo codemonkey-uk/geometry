@@ -148,7 +148,7 @@ void TestTranspose()
 	TEST( matrixA[1][3]	== matrixB[3][1] );
 	TEST( matrixA[2][3]	== matrixB[3][2] );
 	TEST( matrixA[3][3]	== matrixB[3][3] );	
-			
+		
 	Flush("TestTranspose");
 }
 
@@ -158,7 +158,7 @@ void TestMultiply()
 		e= 4, f= 5, g= 6, h= 7, 
 		i= 8, j= 9, k=10, l=11, 
 		m=12, n=13, o=14, p=15;
-	// int q=20, r=21, s=22, t=23, u=24, v=25, w=26, x=27;
+	int q=20, r=21, s=22, t=23, u=24, v=25, w=26, x=27;
 	Geometry::MatrixN<int,4> matrixA = { 
 		0, 1, 2, 3, 
 		4, 5, 6, 7, 
@@ -173,6 +173,19 @@ void TestMultiply()
 	TEST( matrixB[0][1] == b2 );
 	int j2 = i*b + j*f + k*j + l*n;
 	TEST( matrixB[2][1] == j2 );
+	
+	Geometry::MatrixNM<int,4,2> matrixC = {
+		q, r,
+		s, t,
+		u, v, 
+		w, x
+	};
+	
+	Geometry::MatrixNM<int,4,2> matrixD = matrixA * matrixC;
+	TEST( matrixD[0][0] == a*q + b*s + c*u + d*w );
+	TEST( matrixD[0][1] == a*r + b*t + c*v + d*x );	
+	
+	Flush("TestMultiply");
 }
 
 int main()

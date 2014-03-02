@@ -100,18 +100,33 @@ namespace Geometry
 		return arg;
     }
 
-    template<typename Scalar, size_t N, size_t M>
-    MatrixNM<Scalar, N, M> operator* (MatrixNM<Scalar, N, M> lhs, const MatrixNM<Scalar, N, M>& rhs)
+	// generic matrix multiply
+	// MatrixNM[n][m] / [row][column]
+	// N= Row Width, M= Column Height
+	// L = lhs = left hand side, 
+	// R = rhs = right hand side
+	// lhs * rhs, 
+	// LN == RM == LN_RM
+	// Result of the multiplication has the same matrix dimensions as RHS
+    template<typename Scalar, size_t LN, size_t LM, size_t RM, size_t RN>
+    MatrixNM<Scalar, RN, RM> operator* (
+    	const MatrixNM<Scalar, LN, LM>& lhs, 
+    	const MatrixNM<Scalar, RN, RM>& rhs)
     {
-    	MatrixNM<Scalar, N, M> r(uninitialised);
-        for (int n=0;n!=N;++n)
+    	MatrixNM<Scalar, RN, RM> r(uninitialised);
+    	for (int rn=0;rn!=RN;++rn)
         {
-        	for (int m=0;m!=M;++m)
+        	for (int rm=0;rm!=RM;++rm)
         	{
-				r[m][n]=lhs[0][n]*rhs[m][0];
-				for (int rm=1;rm!=N;++rm)
-					r[m][n] += lhs[rm][n]*rhs[m][rm];
-			}
+        		int lhs_n=rn;
+        		int rhs_m=rm;
+        		
+        		r[rn][rm] = lhs[lhs_n][0]*rhs[0][rhs_m];
+        		for(int nm=1;nm!=RN;++nm)
+        		{
+        			r[rn][rm] += lhs[lhs_n][nm]*rhs[nm][rhs_m];
+        		}
+        	}
         }
         return r;
     }
