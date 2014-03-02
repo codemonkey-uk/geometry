@@ -19,8 +19,8 @@ namespace Geometry
 	class MatrixNM
     {
     public:
-        const static size_t sColumns = N;
-        const static size_t sRows = M;
+        const static size_t sColumns = M;
+        const static size_t sRows = N;
         
         typedef Scalar ScalarType;
         typedef MatrixNM<Scalar,N, M> MatrixType;
@@ -118,13 +118,11 @@ namespace Geometry
         {
         	for (int rm=0;rm!=RM;++rm)
         	{
-        		int lhs_n=rn;
-        		int rhs_m=rm;
-        		
-        		r[rn][rm] = lhs[lhs_n][0]*rhs[0][rhs_m];
+        		// multiply rows into columns
+        		r[rn][rm] = lhs[rn][0]*rhs[0][rm];
         		for(int nm=1;nm!=LM_RN;++nm)
         		{
-        			r[rn][rm] += lhs[lhs_n][nm]*rhs[nm][rhs_m];
+        			r[rn][rm] += lhs[rn][nm]*rhs[nm][rm];
         		}
         	}
         }
@@ -187,6 +185,7 @@ namespace Geometry
     MatrixNM<Scalar, N, M>& MatrixNM<Scalar, N, M>::operator = (const MatrixNM& rhs) 
     {
         mData = rhs.mData;
+        return *this;
     }
     
     template< typename Scalar, size_t N, size_t M >

@@ -96,17 +96,18 @@ namespace Geometry
 				}
         	}
         }
-        /*
-        void Pow(int i)
+        
+        MatrixN Pow(int i) const
         {
-			MatrixN a;//identity
+			MatrixN a; //identity
+			MatrixN m = *this;
 			while(i>0){
-				if(i%2) a = a * *this;
+				if(i%2) a = a * m;
 				i=i/2;
 				m=m*m;
-			}        
+			}
+			return a;
         }
-        */
     };
 
     //

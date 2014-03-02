@@ -204,6 +204,36 @@ void TestMultiply()
 	Flush("TestMultiply");
 }
 
+void TestPow()
+{
+	const Geometry::MatrixN<int,4> matrixA = { 
+		0, 1, 2, 3, 
+		4, 5, 6, 7, 
+		8, 9, 10, 11, 
+		12, 13, 14, 15 
+	};
+	const Geometry::MatrixN<int,4> matrixI;
+
+	// m^0 == Identity
+	TEST( matrixA.Pow(0) == matrixI );
+	
+	// m^1 == m
+	TEST( matrixA.Pow(1) == matrixA );
+	
+	// m^2 == m*m
+	TEST( matrixA.Pow(2) == matrixA*matrixA );
+
+	// m^3 == m*m*m
+	TEST( matrixA.Pow(3) == matrixA*matrixA*matrixA );
+	
+	// Raising the identity matrix to any power always generates the identity
+	TEST( matrixI.Pow(3) == matrixI );
+	TEST( matrixI.Pow(4) == matrixI );
+	TEST( matrixI.Pow(5) == matrixI );
+	
+	Flush("TestPow");
+}
+
 int main()
 {	
 	TestLayout();
@@ -211,6 +241,7 @@ int main()
 	TestScale();
 	TestTranspose();
 	TestMultiply();
+	TestPow();
 	
 	// Geometry::MatrixN<int,4> matrix11({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 });
 	// in OGL format
