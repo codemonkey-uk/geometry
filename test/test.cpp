@@ -17,7 +17,7 @@ void Flush(const char* name)
 	tests_passed = 0;
 }
 
-void DebugPrint(Geometry::MatrixN<int,4>& matrix)
+void DebugPrint(const Geometry::MatrixN<int,4>& matrix)
 {
 	for (int n=0;n!=4;n++)
 	{
@@ -111,11 +111,11 @@ void TestScale()
 	const VectorN<int,4> v_sq({2*2,4*4,8*8,1});
 	
 	MatrixN<int,4> test1;
-	test1.Scale(2);
+	test1.BecomeScale(2);
 	TEST( test1 * v == v2 );
 	
 	MatrixN<int,4> test2;
-	test2.Scale(v);
+	test2.BecomeScale(v);
 	TEST( test2 * v == v_sq );
 	
 	Flush("TestScale");
@@ -148,7 +148,24 @@ void TestTranspose()
 	TEST( matrixA[1][3]	== matrixB[3][1] );
 	TEST( matrixA[2][3]	== matrixB[3][2] );
 	TEST( matrixA[3][3]	== matrixB[3][3] );	
-		
+	
+	TEST( matrixB == matrixA.GetTranspose() );
+	
+	// non orthogonal transpose
+	const Geometry::MatrixNM<int,2,4> matrixC = { 
+		0, 1, 2, 3, 
+		4, 5, 6, 7
+	};
+	Geometry::MatrixNM<int,4,2> matrixD = matrixC.GetTranspose();
+	TEST( matrixD[0][0]==matrixC[0][0] );
+	TEST( matrixD[1][0]==matrixC[0][1] );
+	TEST( matrixD[2][0]==matrixC[0][2] );
+	TEST( matrixD[3][0]==matrixC[0][3] );
+	TEST( matrixD[0][1]==matrixC[1][0] );
+	TEST( matrixD[1][1]==matrixC[1][1] );
+	TEST( matrixD[2][1]==matrixC[1][2] );
+	TEST( matrixD[3][1]==matrixC[1][3] );
+	
 	Flush("TestTranspose");
 }
 
@@ -157,7 +174,7 @@ void TestMultiply()
 	int a= 0, b= 1, c= 2, d= 3, 
 		e= 4, f= 5, g= 6, h= 7, 
 		i= 8, j= 9, k=10, l=11, 
-		m=12, n=13, o=14, p=15;
+		m=12, n=13;//, o=14, p=15;
 	int q=20, r=21, s=22, t=23, u=24, v=25, w=26, x=27;
 	const Geometry::MatrixN<int,4> matrixA = { 
 		0, 1, 2, 3, 
@@ -242,6 +259,14 @@ int main()
 	TestTranspose();
 	TestMultiply();
 	TestPow();
+	
+	Vector3d<int> t(2,3,4);
+	MatrixN<int, 4> mt = MatrixN<int, 4>::Translation(t);
+	TEST( mt[3][0] == t[0] );
+	TEST( mt[3][1] == t[1] );
+	TEST( mt[3][2] == t[2] );	
+	
+	Flush("Translation");
 	
 	// Geometry::MatrixN<int,4> matrix11({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 });
 	// in OGL format

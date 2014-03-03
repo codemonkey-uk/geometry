@@ -69,7 +69,7 @@ namespace Geometry
         bool operator == (const MatrixNM& rhs) const;
         bool operator != (const MatrixNM& rhs) const;
 
-        
+        MatrixNM<Scalar,M, N> GetTranspose() const;
     // private:
             // Scalar mData[N*M];
 	        VectorN<Scalar,N*M> mData;
@@ -228,6 +228,20 @@ namespace Geometry
     bool MatrixNM<Scalar, N, M>::operator != (const MatrixNM& rhs) const
     {
         return !(*this==rhs);
+    }
+    
+    template< typename Scalar, size_t N, size_t M >
+    MatrixNM<Scalar,M, N> MatrixNM<Scalar, N, M>::GetTranspose() const
+    {
+    	MatrixNM<Scalar, M, N> r(uninitialised);
+    	for (int rn=0;rn!=M;++rn)
+        {
+        	for (int rm=0;rm!=N;++rm)
+        	{
+        		r[rn][rm] = Get(rm,rn);
+        	}
+        }
+        return r;
     }
 
 

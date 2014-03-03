@@ -52,62 +52,18 @@ namespace Geometry
 		//	: BaseType(rhs)
 		//	{ }
         
-        void BecomeIdentity()
-        {
-        	int i=0;
-        	this->mData[i++]=1;
-        	while(i<N*N)
-        	{
-        		for(int j=0;j!=N;++j)
-        			this->mData[i++]=0;
-        		this->mData[i++]=1;
-        	}
-        }
+        void BecomeIdentity();
         
-        void Scale(VectorN<Scalar, N> s)
-        {
-        	int i=0, a=0;
-        	this->mData[i++]=s[a++];
-        	while(i<N*N)
-        	{
-        		for(int j=0;j!=N;++j)
-        			this->mData[i++]=0;
-        		this->mData[i++]=s[a++];
-        	}
-        } 
+        void BecomeScale(const VectorN<Scalar, N>& s);
+        void BecomeScale(VectorN<Scalar, N-1> s);
+        void BecomeScale(Scalar s);
         
-        void Scale(VectorN<Scalar, N-1> s)
-        {
-			Scale(VectorN<Scalar, N>(s, 1));
-        } 
+        void Transpose();
         
-        void Scale(Scalar s)
-        {
-			Scale(VectorN<Scalar, N-1>(s));
-        }
+        MatrixN Pow(int i) const;
         
-        void Transpose()
-        {
-        	for (int n=0;n!=N;++n)
-        	{
-				for (int m=n+1;m!=N;++m)
-				{
-					std::swap( (*this)[n][m], (*this)[m][n] );
-				}
-        	}
-        }
-        
-        MatrixN Pow(int i) const
-        {
-			MatrixN a; //identity
-			MatrixN m = *this;
-			while(i>0){
-				if(i%2) a = a * m;
-				i=i/2;
-				m=m*m;
-			}
-			return a;
-        }
+        static MatrixN Translation(const VectorN<Scalar, N-1>& t);
+        void BecomeTranslation(const VectorN<Scalar, N-1>& t);
     };
 
     //
@@ -126,6 +82,102 @@ namespace Geometry
         }
         return r;
     }
+	
+	//
+	// Member Functions
+	//
+	
+	template<typename Scalar, size_t N>
+	void MatrixN<Scalar, N>::BecomeIdentity()
+	{
+		int i=0;
+		this->mData[i++]=1;
+		while(i<N*N)
+		{
+			for(int j=0;j!=N;++j)
+				this->mData[i++]=0;
+			this->mData[i++]=1;
+		}
+	}
+	
+	template<typename Scalar, size_t N>
+	void MatrixN<Scalar, N>::BecomeScale(const VectorN<Scalar, N>& s)
+	{
+        {
+        	int i=0, a=0;
+        	this->mData[i++]=s[a++];
+        	while(i<N*N)
+        	{
+        		for(int j=0;j!=N;++j)
+        			this->mData[i++]=0;
+        		this->mData[i++]=s[a++];
+        	}
+        } 
+	}
+	
+	template<typename Scalar, size_t N>
+	void MatrixN<Scalar, N>::BecomeScale(VectorN<Scalar, N-1> s)
+	{
+		BecomeScale(VectorN<Scalar, N>(s, 1));
+	} 
+	
+	template<typename Scalar, size_t N>
+	void MatrixN<Scalar, N>::BecomeScale(Scalar s)
+	{
+		BecomeScale(VectorN<Scalar, N-1>(s));
+	}
+	
+	template<typename Scalar, size_t N>
+	void MatrixN<Scalar, N>::Transpose()
+	{
+		for (int n=0;n!=N;++n)
+		{
+			for (int m=n+1;m!=N;++m)
+			{
+				std::swap( (*this)[n][m], (*this)[m][n] );
+			}
+		}
+	}
+	
+	template<typename Scalar, size_t N>
+	MatrixN<Scalar, N> MatrixN<Scalar, N>::Pow(int i) const
+	{
+		MatrixN a; //identity
+		MatrixN m = *this;
+		while(i>0){
+			if (i%2) a = a * m;
+			i = i / 2;
+			m = m * m;
+		}
+		return a;
+	}
+    
+    // static 
+    template<typename Scalar, size_t N>
+    MatrixN<Scalar, N> MatrixN<Scalar, N>::Translation(const VectorN<Scalar, N-1>& t)
+	{
+		MatrixN result(uninitialised);
+		result.BecomeTranslation(t);
+		return result;
+	}
+	
+	template<typename Scalar, size_t N>
+	void MatrixN<Scalar, N>::BecomeTranslation(const VectorN<Scalar, N-1>& t)
+	{
+		size_t i=0;
+		this->mData[i++]=1;
+		while(i<N*(N-1)-1)
+		{
+			for(size_t j=0;j!=N;++j)
+				this->mData[i++]=0;
+			this->mData[i++]=1;
+		}
+
+		this->mData[i++]=0;
+		for(size_t j=0;j!=N-1;++j)
+			this->mData[i++]=t.Get(j);
+		this->mData[i++]=1;
+	} 
 
 }//namespace Geometry
 
