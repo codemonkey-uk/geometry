@@ -177,8 +177,8 @@ namespace Geometry
 		for(size_t j=0;j!=N-1;++j)
 			this->mData[i++]=t.Get(j);
 		this->mData[i++]=1;
-	} 
-
+	}
+        
 }//namespace Geometry
 
 #endif

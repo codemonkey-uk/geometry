@@ -36,6 +36,25 @@ namespace Geometry
 		return(res);
 	}
 
+	inline float Sin( float f )
+	{
+		return sinf(f);
+	}
+	
+	inline float Cos( float f )
+	{
+		return cosf(f);
+	}
+
+	inline double Sin( double d )
+	{
+		return sin(d);
+	}
+	
+	inline float Cos( double d )
+	{
+		return cos(d);
+	}
 
 }
 
