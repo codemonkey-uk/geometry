@@ -52,6 +52,7 @@ namespace Geometry
 		//	: BaseType(rhs)
 		//	{ }
         
+        static MatrixN Identity();
         void BecomeIdentity();
         
         void BecomeScale(const VectorN<Scalar, N>& s);
@@ -87,6 +88,15 @@ namespace Geometry
 	// Member Functions
 	//
 	
+	//static 
+	template<typename Scalar, size_t N>
+	MatrixN<Scalar, N> MatrixN<Scalar, N>::Identity()
+	{
+		MatrixN<Scalar, N> result(uninitialised);
+		result.BecomeIdentity();
+		return result;
+	}
+	        
 	template<typename Scalar, size_t N>
 	void MatrixN<Scalar, N>::BecomeIdentity()
 	{

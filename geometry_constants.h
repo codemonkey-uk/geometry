@@ -2,8 +2,10 @@
 #define GEOMETRY_CONST_H_INCLUDED
 
 // geometry_constants.h
-// (c) T.Frogley 2003 
+// (c) T.Frogley 2003 ...
 // defines geometric constants, for types #include specfic headers
+
+#include <math.h>
 
 namespace Geometry
 {

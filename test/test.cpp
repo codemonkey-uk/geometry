@@ -1,4 +1,6 @@
+#include "../geometry_constants.h"
 #include "../matrixn.h"
+#include "../matrix4.h"
 #include "../vector3d.h"
 
 using namespace Geometry;
@@ -25,6 +27,21 @@ void DebugPrint(const Geometry::MatrixN<int,4>& matrix)
 	}
 }
 
+void DebugPrint(const Geometry::MatrixN<float,4>& matrix)
+{
+	for (int n=0;n!=4;n++)
+	{
+		printf("%f,%f,%f,%f\n", matrix[n][0],matrix[n][1],matrix[n][2],matrix[n][3]);
+	}
+}
+
+void DebugPrint(const Geometry::MatrixN<double,4>& matrix)
+{
+	for (int n=0;n!=4;n++)
+	{
+		printf("%lf,%lf,%lf,%lf\n", matrix[n][0],matrix[n][1],matrix[n][2],matrix[n][3]);
+	}
+}
 // --- TESTS ---
 
 void TestLayout()
@@ -71,7 +88,28 @@ void TestTranslate()
 	TEST( v2[1]==v[1] );
 	TEST( v2[2]==v[2] );	
 			
+	// construct from vector:
+	const Vector3d<int> tv(2,3,4);
+	MatrixN<int, 4> mt = MatrixN<int, 4>::Translation(tv);
+	TEST( mt[3][0] == tv[0] );
+	TEST( mt[3][1] == tv[1] );
+	TEST( mt[3][2] == tv[2] );	
+	
 	Flush("TestTranslate");
+}
+
+void TestRotate()
+{
+	TEST( Matrix4<float>::RotationAroundZ(0) == Matrix4<float>::Identity() );
+	TEST( Matrix4<double>::RotationAroundZ(0) == Matrix4<double>::Identity() );
+	
+	// TODO
+	
+	// Negating the rotation angle is equivalent to generating the transpose of the matrix.
+
+  	// If a rotation matrix is multiplied with its transpose, the result is the identity matrix.
+  	
+  	Flush("TestRotate");
 }
 
 void TestIdentity()
@@ -255,16 +293,11 @@ int main()
 {	
 	TestLayout();
 	TestTranslate();
+	TestRotate();
 	TestScale();
 	TestTranspose();
 	TestMultiply();
 	TestPow();
-	
-	Vector3d<int> t(2,3,4);
-	MatrixN<int, 4> mt = MatrixN<int, 4>::Translation(t);
-	TEST( mt[3][0] == t[0] );
-	TEST( mt[3][1] == t[1] );
-	TEST( mt[3][2] == t[2] );	
 	
 	Flush("Translation");
 	
