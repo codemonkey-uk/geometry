@@ -32,7 +32,7 @@ namespace Geometry
         	: BaseType(uninitialised)
         { }
         
-        Matrix4(const BaseType& rhs)
+        Matrix4(const typename BaseType::BaseType& rhs)
         	: BaseType(rhs)
         { }
         
