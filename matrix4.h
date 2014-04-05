@@ -55,6 +55,9 @@ namespace Geometry
         
         static Matrix4 RotationFromEuler(const VectorN<Scalar,3>& r);
         void BecomeRotationFromEuler(const VectorN<Scalar,3>& r);
+        
+        static Matrix4 RotationAround(const VectorN<Scalar,3>& axis, Scalar r);
+        void BecomeRotationAround(const VectorN<Scalar,3>& axis, Scalar r);
     };
 
     //
@@ -223,6 +226,39 @@ namespace Geometry
 
 		this->mData[3]  =  this->mData[7] = this->mData[11] = this->mData[12] = this->mData[13] = this->mData[14] = 0;
 		this->mData[15] =  1;
+    }
+    
+    // static 
+	template< typename Scalar>
+	Matrix4<Scalar> Matrix4<Scalar>::RotationAround(const VectorN<Scalar,3>& axis, Scalar r)
+	{
+		Matrix4<Scalar> result(uninitialised);
+		result.BecomeRotationAround(r);
+		return result;
+	}
+	
+	template< typename Scalar>
+    void Matrix4<Scalar>::BecomeRotationAround(const VectorN<Scalar,3>& axis, Scalar r)
+    {
+		const Scalar rcos = Cos(r);
+		const Scalar rsin = Sin(r);
+		const Scalar rcosr = 1-rcos;
+		(*this)[0][0] =            rcos + axis[0]*axis[0]*rcosr;
+		(*this)[1][0] =  axis[2] * rsin + axis[1]*axis[0]*rcosr;
+		(*this)[2][0] = -axis[1] * rsin + axis[2]*axis[0]*rcosr;
+		(*this)[2][0] = 0;
+		(*this)[0][1] = -axis[2] * rsin + axis[0]*axis[1]*rcosr;
+		(*this)[1][1] =            rcos + axis[1]*axis[1]*rcosr;
+		(*this)[2][1] =  axis[0] * rsin + axis[2]*axis[1]*rcosr;
+		(*this)[2][1] = 0;		
+		(*this)[0][2] =  axis[1] * rsin + axis[0]*axis[2]*rcosr;
+		(*this)[1][2] = -axis[0] * rsin + axis[1]*axis[2]*rcosr;
+		(*this)[2][2] =            rcos + axis[2]*axis[2]*rcosr;    
+		(*this)[2][2] = 0;
+		(*this)[0][3] = 0;
+		(*this)[1][3] = 0;
+		(*this)[2][3] = 0;
+		(*this)[3][3] = 1;					
     }
     
 }//namespace Geometry
