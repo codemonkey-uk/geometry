@@ -19,7 +19,7 @@ namespace Geometry
 	// http://www.codecodex.com/wiki/index.php?title=Calculate_an_integer_square_root
 	inline int Sqrt( int x )
 	{
-		register unsigned long op, res, one;
+		unsigned long op, res, one;
 		op = x;
 	    res = 0;
 		
