@@ -100,6 +100,7 @@ namespace Geometry
         static 
         Scalar DotProduct( const VectorN& lhs, const VectorN& rhs );
         
+        VectorN& reverse() { std::reverse(mData, mData+N); return *this; }
     private:
             Scalar mData[N];
     };
