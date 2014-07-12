@@ -85,6 +85,7 @@ namespace Geometry
         Scalar Length() const;
         Scalar DistanceSquare(const VectorN& rhs) const;
         Scalar Distance(const VectorN& rhs) const;
+        Scalar ManhattenDistance(const VectorN& rhs) const;
         
         // binary operators
         VectorN& operator = (const VectorN& rhs);
@@ -241,7 +242,17 @@ namespace Geometry
         }
         return l2;
     }
-    
+
+    template< typename Scalar, size_t N >
+    Scalar VectorN<Scalar,N>::ManhattenDistance(const VectorN& rhs) const {
+        Scalar r = 0;
+        for (size_t i=0;i<N;++i)
+        {
+            r += Abs(rhs.mData[i] - mData[i]);
+        }
+        return r;
+    }
+        
     template< typename Scalar, size_t N >
     Scalar VectorN<Scalar,N>::Distance(const VectorN& rhs) const {
         return Sqrt( DistanceSquare(rhs) );

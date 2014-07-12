@@ -3,6 +3,7 @@
 
 #include <limits>
 #include <math.h>
+#include <stdlib.h>
 
 namespace Geometry
 {
@@ -56,6 +57,20 @@ namespace Geometry
 		return cos(d);
 	}
 
+	inline int Abs( int i )
+	{
+		return abs(i);
+	}
+
+	inline int Abs( float f )
+	{
+		return fabs(f);
+	}
+
+	inline int Abs( double d )
+	{
+		return fabs(d);
+	}
 }
 
 #endif //BASIC_MATHS_HEADER_INCLUDED
