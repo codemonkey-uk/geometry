@@ -24,7 +24,7 @@ namespace Geometry
             Vector2d(const Uninitialised&);
                         
             //upcast constructor
-            explicit Vector2d( const VectorN<Scalar, 2>& rhs );
+            Vector2d( const VectorN<Scalar, 2>& rhs );
             
             //simple accessor functions
             //note !!! don't like non-const Scalar & Get but required by shaded_relief

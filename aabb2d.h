@@ -16,18 +16,26 @@ namespace Geometry
     class AxisAlignedBoundingBox2d : public AxisAlignedBoundingBox< Vector2d<Scalar> >
     {
         public:
-            typedef typename AxisAlignedBoundingBox< Vector2d<Scalar> >::VectorType VectorType;
+            typedef AxisAlignedBoundingBox< Vector2d<Scalar> > BaseType;
+            typedef typename BaseType::VectorType VectorType;
             
             AxisAlignedBoundingBox2d(const VectorType& minBound, const VectorType& maxBound)
-                : AxisAlignedBoundingBox< Vector2d<Scalar> >( minBound, maxBound ) 
+                : BaseType( minBound, maxBound ) 
             { }
             
             AxisAlignedBoundingBox2d(Scalar x1, Scalar y1, Scalar x2, Scalar y2)
-                : AxisAlignedBoundingBox< Vector2d<Scalar> >( VectorType(x1, y1), VectorType(x2, y2) ) 
+                : BaseType( VectorType(x1, y1), VectorType(x2, y2) ) 
             { }
             
             AxisAlignedBoundingBox2d(const Uninitialised& u)
-             : AxisAlignedBoundingBox< Vector2d<Scalar> >(u) {}
+             : BaseType(u) {}
+             
+            AxisAlignedBoundingBox2d(const BaseType& rhs)
+             : BaseType(rhs) {}
+
+            AxisAlignedBoundingBox2d(const VectorType& rhs)
+             : BaseType(rhs) {}
+                                       
             typename VectorType::ScalarType GetWidth() const
             {
                 return this->GetAxisExtent(0);
@@ -37,6 +45,11 @@ namespace Geometry
             {
                 return this->GetAxisExtent(1);
             }
+            
+            // TODO: Create general GetVolume in base
+			typename VectorType::ScalarType GetArea()const{
+				return GetWidth()*GetHeight();
+			}
 			
 			Triangle2d<Scalar> GetEnclosingTriangle()const
 			{
@@ -46,6 +59,23 @@ namespace Geometry
 					c( this->mA.GetX() - this->GetHeight(),  this->mB.GetY() );
 				return Triangle2d<Scalar>( a, b, c );
 			}
+						
+			VectorType BottomLeft()const
+			{
+				return this->mA;
+			}
+			VectorType BottomRight()const
+			{
+				return VectorType(this->mB.GetX(),this->mA.GetY());
+			}
+			VectorType TopLeft()const
+			{
+				return VectorType(this->mA.GetX(),this->mB.GetY());
+			}
+			VectorType TopRight()const
+			{
+				return this->mB;
+			}			
     };
 }    
 
