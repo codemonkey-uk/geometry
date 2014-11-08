@@ -28,7 +28,9 @@ namespace Geometry
 
             VectorType GetCenter() const;
             bool Contains( const VectorBase& p ) const;
+            bool Contains(const AxisAlignedBoundingBox& rhs)const;
             void ExpandToContain( const VectorBase& p );
+            void ExpandToContain( const AxisAlignedBoundingBox& rhs);
 
             ScalarType GetAxisExtent(size_t axis) const;
             VectorType GetDiagonal() const;
@@ -121,6 +123,12 @@ namespace Geometry
     }
 
     template<typename T>
+    bool AxisAlignedBoundingBox<T>::Contains( const AxisAlignedBoundingBox<T>& rhs ) const
+    {
+        return Contains(rhs.mA) && Contains(rhs.mB);
+    }
+
+    template<typename T>
     void AxisAlignedBoundingBox<T>::ExpandToContain( const VectorBase& p )
     {
         for (size_t d = 0; d!=VectorBase::sDimensions; ++d)
@@ -128,6 +136,13 @@ namespace Geometry
             if (mA[d] > p[d]) mA[d] = p[d];
             if (mB[d] < p[d]) mB[d] = p[d];
         }
+    }
+
+    template<typename T>
+    void AxisAlignedBoundingBox<T>::ExpandToContain( const AxisAlignedBoundingBox<T>& rhs )
+    {
+        ExpandToContain(rhs.mA);
+        ExpandToContain(rhs.mB);
     }
 
     template<typename T>
