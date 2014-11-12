@@ -59,19 +59,19 @@ namespace Geometry
                 return Triangle2d<Scalar>( a, b, c );
             }
 
-            VectorType BottomLeft()const
+            VectorType TopLeft()const
             {
                 return this->mA;
             }
-            VectorType BottomRight()const
+            VectorType TopRight()const
             {
                 return VectorType(this->mB.GetX(),this->mA.GetY());
             }
-            VectorType TopLeft()const
+            VectorType BottomLeft()const
             {
                 return VectorType(this->mA.GetX(),this->mB.GetY());
             }
-            VectorType TopRight()const
+            VectorType BottomRight()const
             {
                 return this->mB;
             }
