@@ -17,7 +17,7 @@ namespace Geometry
     //
     // Interface
     //
-    
+
     template< typename Scalar, size_t N >
 	class VectorN
     {
@@ -26,33 +26,33 @@ namespace Geometry
         typedef Scalar ScalarType;
         typedef VectorN<Scalar,N> VectorType;
         typedef VectorN<Scalar,N> BaseType;
-        
+
         //get the number of elements / dimentions for this type
         static
         size_t GetSize();
-        
+
         // explictly uninitialised construction
         explicit VectorN(const Uninitialised&)
         { }
-        
+
         explicit VectorN(Scalar d)
         {
         	std::fill(mData, mData+N, d);
         }
-        
+
         explicit VectorN(const Scalar data[N])
         {
         	std::copy(data, data+N, mData);
         }
-        
-        VectorN(std::initializer_list<Scalar> data) 
-        { 
+
+        VectorN(std::initializer_list<Scalar> data)
+        {
 			assert(data.size()==N); // "Exactly N elements required."
-			std::copy(data.begin(), data.end(), mData); 
+			std::copy(data.begin(), data.end(), mData);
 		}
-        
+
         // building a vector from a smaller vector and adding a component
-        VectorN( const VectorN<Scalar, N-1>& rhs, Scalar nth ) 
+        VectorN( const VectorN<Scalar, N-1>& rhs, Scalar nth )
 		{
 			size_t i=0;
 			for (;i<N-1;++i)
@@ -61,24 +61,24 @@ namespace Geometry
 			}
 			mData[i] = nth;
 		}
-        
+
         //type conversion constructor
         template< typename OtherScalar >
-		VectorN<Scalar,N>( const VectorN<OtherScalar, N>& rhs ) 
+		VectorN<Scalar,N>( const VectorN<OtherScalar, N>& rhs )
 		{
 				for (size_t i=0;i<N;++i)
 				{
 					mData[i] = Scalar(rhs[i]);
 				}
 		}
-        
+
         // simple accessors
         void Set (size_t offset, Scalar value);
         Scalar& operator[] (size_t offset);
         Scalar Get (size_t offset) const;
 
         const Scalar& operator[] (size_t offset)  const;
-        
+
         // distance and length
         // todo !!! not using get/compute naming convention
         Scalar LengthSquare() const;
@@ -86,7 +86,7 @@ namespace Geometry
         Scalar DistanceSquare(const VectorN& rhs) const;
         Scalar Distance(const VectorN& rhs) const;
         Scalar ManhattenDistance(const VectorN& rhs) const;
-        
+
         // binary operators
         VectorN& operator = (const VectorN& rhs);
         VectorN& operator += (const VectorN& rhs);
@@ -95,12 +95,12 @@ namespace Geometry
         VectorN& operator *= (const Scalar rhs);
         bool operator == (const VectorN& rhs) const;
         bool operator != (const VectorN& rhs) const;
-        
+
         void Normalise();
-        
-        static 
+
+        static
         Scalar DotProduct( const VectorN& lhs, const VectorN& rhs );
-        
+
         VectorN& reverse() { std::reverse(mData, mData+N); return *this; }
     private:
             Scalar mData[N];
@@ -109,7 +109,7 @@ namespace Geometry
     //
     // Free-functions
     //
-    
+
     template< typename Scalar, size_t N >
     Scalar DotProduct( const VectorN<Scalar,N>& lhs, const VectorN<Scalar,N>& rhs )
     {
@@ -122,14 +122,14 @@ namespace Geometry
         lhs += rhs;
         return lhs;
     }
-    
+
     template<typename Scalar, size_t N>
     VectorN<Scalar, N> operator- (VectorN<Scalar, N> lhs, const VectorN<Scalar, N>& rhs)
     {
         lhs -= rhs;
         return lhs;
     }
-    
+
     template<typename Scalar, size_t N>
     VectorN<Scalar, N> operator/ (VectorN<Scalar, N> lhs, const Scalar rhs)
     {
@@ -143,25 +143,25 @@ namespace Geometry
         lhs *= rhs;
         return lhs;
     }
-    
+
     template<typename Scalar, size_t N>
     VectorN<Scalar, N> operator- (VectorN<Scalar, N> arg)
     {
             for(size_t i=0;i!=N;++i)
             {
-                arg[i] = -arg[i];   
+                arg[i] = -arg[i];
             }
             return arg;
     }
-    
-    template<typename Scalar, size_t N>    
+
+    template<typename Scalar, size_t N>
     void ComputeMidpoint(const VectorN<Scalar, N>& a, const VectorN<Scalar, N>& b, VectorN< Scalar, N>* ab )
     {
         for(size_t i=0;i!=N;++i)
             ab->Set(i, a[i] + (b[i]-a[i])/2);
     }
 
-    template<typename Scalar, size_t N>    
+    template<typename Scalar, size_t N>
     VectorN<Scalar, N> GetMidpoint(const VectorN<Scalar, N>& a, const VectorN<Scalar, N>& b)
     {
         VectorN<Scalar, N> ab( uninitialised );
@@ -173,10 +173,10 @@ namespace Geometry
     // Class Implementation
     // (in header as is a template)
     //
-	/*    
+	/*
     template< typename Scalar, size_t N >
     template< typename OtherScalar >
-    VectorN<Scalar,N>::VectorN<Scalar,N>( const VectorN<OtherScalar, N>& rhs ) 
+    VectorN<Scalar,N>::VectorN<Scalar,N>( const VectorN<OtherScalar, N>& rhs )
     {
             for (size_t i=0;i<N;++i)
             {
@@ -184,41 +184,41 @@ namespace Geometry
             }
     }
 	*/
-    
+
     template< typename Scalar, size_t N >
-    size_t VectorN<Scalar,N>::GetSize() 
+    size_t VectorN<Scalar,N>::GetSize()
     {
         return sDimensions;
     }
-    
+
     template< typename Scalar, size_t N >
     void VectorN<Scalar,N>::Set(size_t offset, Scalar value)
     {
         assert( offset<N );
         mData[offset]=value;
     }
-    
+
     template< typename Scalar, size_t N >
-    Scalar& VectorN<Scalar,N>::operator[] (size_t offset) 
+    Scalar& VectorN<Scalar,N>::operator[] (size_t offset)
     {
         assert( offset<N );
         return mData[offset];
     }
 
     template< typename Scalar, size_t N >
-    Scalar VectorN<Scalar,N>::Get(size_t offset ) const 
+    Scalar VectorN<Scalar,N>::Get(size_t offset ) const
     {
         assert( offset<N );
         return mData[offset];
     }
-    
+
     template< typename Scalar, size_t N >
-    const Scalar& VectorN<Scalar,N>::operator[] (size_t offset)  const 
+    const Scalar& VectorN<Scalar,N>::operator[] (size_t offset)  const
     {
         assert( offset<N );
         return mData[offset];
     }
-    
+
     template< typename Scalar, size_t N >
     Scalar VectorN<Scalar,N>::LengthSquare() const {
         Scalar l2 = 0;
@@ -226,12 +226,12 @@ namespace Geometry
             l2 += mData[i]*mData[i];
         return l2;
     }
-    
+
     template< typename Scalar, size_t N >
     Scalar VectorN<Scalar,N>::Length() const {
         return Sqrt( LengthSquare() );
     }
-    
+
     template< typename Scalar, size_t N >
     Scalar VectorN<Scalar,N>::DistanceSquare(const VectorN& rhs) const {
         Scalar l2 = 0;
@@ -252,44 +252,44 @@ namespace Geometry
         }
         return r;
     }
-        
+
     template< typename Scalar, size_t N >
     Scalar VectorN<Scalar,N>::Distance(const VectorN& rhs) const {
         return Sqrt( DistanceSquare(rhs) );
     }
-    
+
     template< typename Scalar, size_t N >
-    VectorN<Scalar,N>& VectorN<Scalar,N>::operator = (const VectorN& rhs) 
+    VectorN<Scalar,N>& VectorN<Scalar,N>::operator = (const VectorN& rhs)
     {
         for (size_t i=0;i<N;++i)
             mData[i] = rhs.mData[i];
         return *this;
     }
-    
+
     template< typename Scalar, size_t N >
-    VectorN<Scalar,N>& VectorN<Scalar,N>::operator += (const VectorN& rhs) 
+    VectorN<Scalar,N>& VectorN<Scalar,N>::operator += (const VectorN& rhs)
     {
         for (size_t i=0;i!=N;++i)
             mData[i] += rhs.mData[i];
         return *this;
     }
-    
+
     template< typename Scalar, size_t N >
-    VectorN<Scalar,N>& VectorN<Scalar,N>::operator -= (const VectorN& rhs) 
+    VectorN<Scalar,N>& VectorN<Scalar,N>::operator -= (const VectorN& rhs)
     {
         for (size_t i=0;i!=N;++i)
             mData[i] -= rhs.mData[i];
         return *this;
     }
-    
+
     template< typename Scalar, size_t N >
-    VectorN<Scalar,N>& VectorN<Scalar,N>::operator /= (const Scalar rhs) 
+    VectorN<Scalar,N>& VectorN<Scalar,N>::operator /= (const Scalar rhs)
     {
         for (size_t i=0;i!=N;++i)
             mData[i] /= rhs;
         return *this;
     }
-    
+
     template< typename Scalar, size_t N >
     VectorN<Scalar,N>& VectorN<Scalar,N>::operator *= (const Scalar rhs)
     {
@@ -297,7 +297,7 @@ namespace Geometry
             mData[i] *= rhs;
         return *this;
     }
-    
+
     template< typename Scalar, size_t N >
     bool VectorN<Scalar,N>::operator == (const VectorN& rhs) const
     {
@@ -305,21 +305,21 @@ namespace Geometry
             if (mData[i] != rhs.mData[i]) return false;
         return true;
     }
-    
+
     template< typename Scalar, size_t N >
     bool VectorN<Scalar,N>::operator != (const VectorN& rhs) const
     {
         return !(*this==rhs);
     }
-    
+
     template< typename Scalar, size_t N >
-    void VectorN<Scalar,N>::Normalise() 
+    void VectorN<Scalar,N>::Normalise()
     {
         Scalar length = Length();
         for (size_t i=0;i<N;++i)
             mData[i] /= length;
     }
-    
+
     template< typename Scalar, size_t N >
     Scalar VectorN<Scalar,N>::DotProduct( const VectorN& lhs, const VectorN& rhs )
     {
@@ -333,20 +333,35 @@ namespace Geometry
 	class LineN
 	{
 	public:
-		// typedef Scalar VectorType::ScalarType;
+        typedef typename VectorType::ScalarType Scalar;
         //typedef VectorN<Scalar,N> VectorType;
         //typedef VectorN<Scalar,N> BaseType;
 
-		LineN( const VectorType& start, const VectorType& finish )
-			: mStart(start)
-			, mFinish(finish)
-		{
-		}
+        LineN( const VectorType& start, const VectorType& finish )
+        	: mStart(start)
+        	, mFinish(finish)
+        {
+        }
+
+        Scalar LengthSquare() const
+        {
+            return mStart.DistanceSquare(mFinish);
+        }
+
+        Scalar Length() const
+        {
+            return mStart.Distance(mFinish);
+        }
+
+        VectorType GetMidpoint() const
+        {
+            return Geometry::GetMidpoint(mStart, mFinish);
+        }
 
 	//private:
 		VectorType mStart;
 		VectorType mFinish;
-		
+
 	};
 
 }//namespace Geometry
