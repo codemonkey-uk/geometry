@@ -99,34 +99,34 @@ namespace Geometry
         (*this)[1] = y;
     }
 
-	template< typename Scalar >
-	class Line2d : public LineN< Vector2d<Scalar> >
-	{
-	public:
-		typedef Vector2d<Scalar> VectorType;
-		typedef Scalar ScalarType;
+    template< typename Scalar >
+    class Line2d : public LineN< Vector2d<Scalar> >
+    {
+    public:
+        typedef Vector2d<Scalar> VectorType;
+        typedef Scalar ScalarType;
 
-		Line2d( const VectorType& start, const VectorType& finish )
-			: LineN<Vector2d<Scalar> >(start, finish)
-		{
-		}
+        Line2d( const VectorType& start, const VectorType& finish )
+            : LineN<Vector2d<Scalar> >(start, finish)
+        {
+        }
 
-		VectorType Normal()const
-		{
-			VectorType result(this->mFinish);
-			result -= this->mStart;
-			result.Normalise();
-			ScalarType temp = result.Get(0);
-			result.Set(0, -result.Get(1));
-			result.Set(1, temp);
-			return result;
-		}
+        VectorType Normal()const
+        {
+            VectorType result(this->mFinish);
+            result -= this->mStart;
+            result.Normalise();
+            ScalarType temp = result.Get(0);
+            result.Set(0, -result.Get(1));
+            result.Set(1, temp);
+            return result;
+        }
 
-		ScalarType SignedDistance(const VectorType& p)const
-		{
-			VectorType v(p - this->mStart);
-			return DotProduct(v, Normal());
-		}
+        ScalarType SignedDistance(const VectorType& p)const
+        {
+            VectorType v(p - this->mStart);
+            return DotProduct(v, Normal());
+        }
 
         ScalarType Side(const VectorType& p)const
         {
@@ -134,7 +134,7 @@ namespace Geometry
             VectorType ap(p - this->mStart);
             return (ab.GetX()*ap.GetY())-(ab.GetY()*ap.GetX());
         }
-	};
+    };
 }
 
 #endif

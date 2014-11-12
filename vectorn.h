@@ -19,7 +19,7 @@ namespace Geometry
     //
 
     template< typename Scalar, size_t N >
-	class VectorN
+    class VectorN
     {
     public:
         const static size_t sDimensions = N;
@@ -37,40 +37,40 @@ namespace Geometry
 
         explicit VectorN(Scalar d)
         {
-        	std::fill(mData, mData+N, d);
+            std::fill(mData, mData+N, d);
         }
 
         explicit VectorN(const Scalar data[N])
         {
-        	std::copy(data, data+N, mData);
+            std::copy(data, data+N, mData);
         }
 
         VectorN(std::initializer_list<Scalar> data)
         {
-			assert(data.size()==N); // "Exactly N elements required."
-			std::copy(data.begin(), data.end(), mData);
-		}
+            assert(data.size()==N); // "Exactly N elements required."
+            std::copy(data.begin(), data.end(), mData);
+        }
 
         // building a vector from a smaller vector and adding a component
         VectorN( const VectorN<Scalar, N-1>& rhs, Scalar nth )
-		{
-			size_t i=0;
-			for (;i<N-1;++i)
-			{
-				mData[i] = rhs[i];
-			}
-			mData[i] = nth;
-		}
+        {
+            size_t i=0;
+            for (;i<N-1;++i)
+            {
+                mData[i] = rhs[i];
+            }
+            mData[i] = nth;
+        }
 
         //type conversion constructor
         template< typename OtherScalar >
-		VectorN<Scalar,N>( const VectorN<OtherScalar, N>& rhs )
-		{
-				for (size_t i=0;i<N;++i)
-				{
-					mData[i] = Scalar(rhs[i]);
-				}
-		}
+        VectorN<Scalar,N>( const VectorN<OtherScalar, N>& rhs )
+        {
+                for (size_t i=0;i<N;++i)
+                {
+                    mData[i] = Scalar(rhs[i]);
+                }
+        }
 
         // simple accessors
         void Set (size_t offset, Scalar value);
@@ -173,7 +173,7 @@ namespace Geometry
     // Class Implementation
     // (in header as is a template)
     //
-	/*
+    /*
     template< typename Scalar, size_t N >
     template< typename OtherScalar >
     VectorN<Scalar,N>::VectorN<Scalar,N>( const VectorN<OtherScalar, N>& rhs )
@@ -183,7 +183,7 @@ namespace Geometry
                 mData[i] = Scalar(rhs[i]);
             }
     }
-	*/
+    */
 
     template< typename Scalar, size_t N >
     size_t VectorN<Scalar,N>::GetSize()
@@ -329,17 +329,15 @@ namespace Geometry
         return result;
     }
 
-	template< typename VectorType >
-	class LineN
-	{
-	public:
+    template< typename VectorType >
+    class LineN
+    {
+    public:
         typedef typename VectorType::ScalarType Scalar;
-        //typedef VectorN<Scalar,N> VectorType;
-        //typedef VectorN<Scalar,N> BaseType;
 
         LineN( const VectorType& start, const VectorType& finish )
-        	: mStart(start)
-        	, mFinish(finish)
+            : mStart(start)
+            , mFinish(finish)
         {
         }
 
@@ -358,11 +356,11 @@ namespace Geometry
             return Geometry::GetMidpoint(mStart, mFinish);
         }
 
-	//private:
-		VectorType mStart;
-		VectorType mFinish;
+    //private:
+        VectorType mStart;
+        VectorType mFinish;
 
-	};
+    };
 
 }//namespace Geometry
 
