@@ -362,6 +362,14 @@ namespace Geometry
 
     };
 
+    template< typename Scalar >
+    Scalar Side(const LineN< VectorN<Scalar,2> >& lhs, const VectorN<Scalar,2>& rhs)
+    {
+        VectorN<Scalar,2> ab(lhs.mFinish - lhs.mStart);
+        VectorN<Scalar,2> ap(rhs - lhs.mStart);
+        return (ab.Get(0)*ap.Get(1))-(ab.Get(1)*ap.Get(0));
+    }
+
 }//namespace Geometry
 
 #endif

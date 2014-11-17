@@ -130,9 +130,7 @@ namespace Geometry
 
         ScalarType Side(const VectorType& p)const
         {
-            VectorType ab(this->mFinish - this->mStart);
-            VectorType ap(p - this->mStart);
-            return (ab.GetX()*ap.GetY())-(ab.GetY()*ap.GetX());
+            return Side(*this, p);
         }
     };
 }
