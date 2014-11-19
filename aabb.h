@@ -44,6 +44,8 @@ namespace Geometry
             ScalarType GetInradius()const;
             VectorType GetIncenter()const;
 
+            ScalarType GetCircumradius()const;
+
             bool Overlaps(const AxisAlignedBoundingBox& rhs)const;
 
             //compare sizes of AABBs
@@ -198,6 +200,12 @@ namespace Geometry
             if (b<a) a=b;
         }
         return a/2;
+    }
+
+    template<typename T>
+    typename AxisAlignedBoundingBox<T>::ScalarType AxisAlignedBoundingBox<T>::GetCircumradius()const
+    {
+        return this->GetDiagonal().Length() / 2;
     }
 
     template<typename T>

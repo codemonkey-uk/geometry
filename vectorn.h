@@ -47,8 +47,9 @@ namespace Geometry
 
         VectorN(std::initializer_list<Scalar> data)
         {
-            assert(data.size()==N); // "Exactly N elements required."
+            assert(data.size()<=N);
             std::copy(data.begin(), data.end(), mData);
+            std::fill(mData+data.size(), mData+N, 0);
         }
 
         // building a vector from a smaller vector and adding a component
