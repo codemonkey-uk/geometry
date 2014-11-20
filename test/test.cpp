@@ -2,16 +2,17 @@
 #include "../matrixn.h"
 #include "../matrix4.h"
 #include "../vector3d.h"
+#include "../aabb.h"
 
 using namespace Geometry;
-	
+
 // --- TEST HELPERS ---
 
 int tests_passed = 0;
 int tests_failed = 0;
 #define TEST( condition ) if (!(condition)) { \
 	printf("failed: %s\n", #condition); tests_failed++; \
-	} else { tests_passed++; } 
+	} else { tests_passed++; }
 
 void Flush(const char* name)
 {
@@ -58,9 +59,9 @@ void TestLayout()
 void TestTranslate()
 {
 	int dx=1;
-	int dy=2;	
+	int dy=2;
 	int dz=4;
-	
+
 	// translation matrix
 	MatrixN<int,4> t({
 		1, 0, 0, 0,
@@ -69,32 +70,32 @@ void TestTranslate()
 		dx, dy, dz, 1
 	});
 
-	// position vector	
+	// position vector
 	VectorN<int,4> v({8,16,32,1});
 
 	VectorN<int,4> v2 = t * v;
-	
+
 	// should be translated
 	TEST( v2[0]==v[0]+dx );
 	TEST( v2[1]==v[1]+dy );
 	TEST( v2[2]==v[2]+dz );
-	
+
 	// direction vector
 	v[3]=0;
 	v2 = t * v;
-	
+
 	// should be unchanged
 	TEST( v2[0]==v[0] );
 	TEST( v2[1]==v[1] );
-	TEST( v2[2]==v[2] );	
-			
+	TEST( v2[2]==v[2] );
+
 	// construct from vector:
 	const Vector3d<int> tv(2,3,4);
 	MatrixN<int, 4> mt = MatrixN<int, 4>::Translation(tv);
 	TEST( mt[3][0] == tv[0] );
 	TEST( mt[3][1] == tv[1] );
-	TEST( mt[3][2] == tv[2] );	
-	
+	TEST( mt[3][2] == tv[2] );
+
 	Flush("TestTranslate");
 }
 
@@ -102,24 +103,24 @@ void TestRotate()
 {
 	TEST( Matrix4<float>::RotationAroundZ(0) == Matrix4<float>::Identity() );
 	TEST( Matrix4<double>::RotationAroundZ(0) == Matrix4<double>::Identity() );
-	
+
 	// TODO
-	
+
 	// Negating the rotation angle is equivalent to generating the transpose of the matrix.
 
   	// If a rotation matrix is multiplied with its transpose, the result is the identity matrix.
-  	
+
   	Flush("TestRotate");
 }
 
 void TestIdentity()
 {
 	// two ways to get identity matrix
-	
+
 	// manually, create uninitialised, then call BecomeIdentity
 	MatrixN<int,4> test1(uninitialised);
 	test1.BecomeIdentity();
-	
+
 	// or default constructor
 	MatrixN<int,4> test2;
 
@@ -128,14 +129,14 @@ void TestIdentity()
 		for (int m=0;m!=4;m++)
 		{
 			TEST( test1[n][m]==(n==m) );
-			TEST( test2[n][m]==(n==m) );			
+			TEST( test2[n][m]==(n==m) );
 		}
 	}
-	
+
 	// check that identity * vector leaves vector unmodified
 	VectorN<int,4> v({8,16,32,1});
 	TEST( test2 * v == v );
-	
+
 	Flush("TestIdentity");
 }
 
@@ -147,25 +148,25 @@ void TestScale()
 	const VectorN<int,4> v2({2*2,4*2,8*2,1});
 	// v*v, note w should not be scaled!
 	const VectorN<int,4> v_sq({2*2,4*4,8*8,1});
-	
+
 	MatrixN<int,4> test1;
 	test1.BecomeScale(2);
 	TEST( test1 * v == v2 );
-	
+
 	MatrixN<int,4> test2;
 	test2.BecomeScale(v);
 	TEST( test2 * v == v_sq );
-	
+
 	Flush("TestScale");
 }
 
 void TestTranspose()
 {
-	const Geometry::MatrixN<int,4> matrixA = { 
-		0, 1, 2, 3, 
-		4, 5, 6, 7, 
-		8, 9, 10, 11, 
-		12, 13, 14, 15 
+	const Geometry::MatrixN<int,4> matrixA = {
+		0, 1, 2, 3,
+		4, 5, 6, 7,
+		8, 9, 10, 11,
+		12, 13, 14, 15
 	};
 	Geometry::MatrixN<int,4> matrixB = matrixA;
 	matrixB.Transpose();
@@ -173,25 +174,25 @@ void TestTranspose()
 	TEST( matrixA[0][0]	== matrixB[0][0] );
 	TEST( matrixA[1][0]	== matrixB[0][1] );
 	TEST( matrixA[2][0]	== matrixB[0][2] );
-	TEST( matrixA[3][0]	== matrixB[0][3] );	
+	TEST( matrixA[3][0]	== matrixB[0][3] );
 	TEST( matrixA[0][1]	== matrixB[1][0] );
 	TEST( matrixA[1][1]	== matrixB[1][1] );
 	TEST( matrixA[2][1]	== matrixB[1][2] );
-	TEST( matrixA[3][1]	== matrixB[1][3] );	
+	TEST( matrixA[3][1]	== matrixB[1][3] );
 	TEST( matrixA[0][2]	== matrixB[2][0] );
 	TEST( matrixA[1][2]	== matrixB[2][1] );
 	TEST( matrixA[2][2]	== matrixB[2][2] );
-	TEST( matrixA[3][2]	== matrixB[2][3] );	
+	TEST( matrixA[3][2]	== matrixB[2][3] );
 	TEST( matrixA[0][3]	== matrixB[3][0] );
 	TEST( matrixA[1][3]	== matrixB[3][1] );
 	TEST( matrixA[2][3]	== matrixB[3][2] );
-	TEST( matrixA[3][3]	== matrixB[3][3] );	
-	
+	TEST( matrixA[3][3]	== matrixB[3][3] );
+
 	TEST( matrixB == matrixA.GetTranspose() );
-	
+
 	// non orthogonal transpose
-	const Geometry::MatrixNM<int,2,4> matrixC = { 
-		0, 1, 2, 3, 
+	const Geometry::MatrixNM<int,2,4> matrixC = {
+		0, 1, 2, 3,
 		4, 5, 6, 7
 	};
 	Geometry::MatrixNM<int,4,2> matrixD = matrixC.GetTranspose();
@@ -203,24 +204,24 @@ void TestTranspose()
 	TEST( matrixD[1][1]==matrixC[1][1] );
 	TEST( matrixD[2][1]==matrixC[1][2] );
 	TEST( matrixD[3][1]==matrixC[1][3] );
-	
+
 	Flush("TestTranspose");
 }
 
 void TestMultiply()
  {
-	int a= 0, b= 1, c= 2, d= 3, 
-		e= 4, f= 5, g= 6, h= 7, 
-		i= 8, j= 9, k=10, l=11, 
+	int a= 0, b= 1, c= 2, d= 3,
+		e= 4, f= 5, g= 6, h= 7,
+		i= 8, j= 9, k=10, l=11,
 		m=12, n=13;//, o=14, p=15;
 	int q=20, r=21, s=22, t=23, u=24, v=25, w=26, x=27;
-	const Geometry::MatrixN<int,4> matrixA = { 
-		0, 1, 2, 3, 
-		4, 5, 6, 7, 
-		8, 9, 10, 11, 
-		12, 13, 14, 15 
-	};	
-	
+	const Geometry::MatrixN<int,4> matrixA = {
+		0, 1, 2, 3,
+		4, 5, 6, 7,
+		8, 9, 10, 11,
+		12, 13, 14, 15
+	};
+
 	// 4x4*4x4
 	Geometry::MatrixN<int,4> matrixB = matrixA*matrixA;
 	int a2 = a*a + b*e + c*i + d*m;
@@ -229,68 +230,92 @@ void TestMultiply()
 	TEST( matrixB[0][1] == b2 );
 	int j2 = i*b + j*f + k*j + l*n;
 	TEST( matrixB[2][1] == j2 );
-	
+
 	const Geometry::MatrixNM<int,4,2> matrixC = {
 		q, r,
 		s, t,
-		u, v, 
+		u, v,
 		w, x
 	};
-	
+
 	// 4x4 * 4x2
 	Geometry::MatrixNM<int,4,2> matrixD = matrixA * matrixC;
 	TEST( matrixD[0][0] == a*q + b*s + c*u + d*w );
-	TEST( matrixD[0][1] == a*r + b*t + c*v + d*x );	
-	
+	TEST( matrixD[0][1] == a*r + b*t + c*v + d*x );
+
 	const Geometry::MatrixNM<int,2,4> matrixE = {
 		a, b, c, d,
 		e, f, g, h
 	};
-	
+
 	Geometry::MatrixNM<int,2,4> matrixF = matrixC * matrixE;
 	TEST( matrixF[0][0] == q*a + r*e );
-	
+
 	// 2x4 * 4x2 runtime error :(
 	// matrixE * matrixC;
-	
-	// 4x2 * 4*4 does not compile: 
+
+	// 4x2 * 4*4 does not compile:
 	// matrixC * matrixA;
-		
+
 	Flush("TestMultiply");
 }
 
 void TestPow()
 {
-	const Geometry::MatrixN<int,4> matrixA = { 
-		0, 1, 2, 3, 
-		4, 5, 6, 7, 
-		8, 9, 10, 11, 
-		12, 13, 14, 15 
+	const Geometry::MatrixN<int,4> matrixA = {
+		0, 1, 2, 3,
+		4, 5, 6, 7,
+		8, 9, 10, 11,
+		12, 13, 14, 15
 	};
 	const Geometry::MatrixN<int,4> matrixI;
 
 	// m^0 == Identity
 	TEST( matrixA.Pow(0) == matrixI );
-	
+
 	// m^1 == m
 	TEST( matrixA.Pow(1) == matrixA );
-	
+
 	// m^2 == m*m
 	TEST( matrixA.Pow(2) == matrixA*matrixA );
 
 	// m^3 == m*m*m
 	TEST( matrixA.Pow(3) == matrixA*matrixA*matrixA );
-	
+
 	// Raising the identity matrix to any power always generates the identity
 	TEST( matrixI.Pow(3) == matrixI );
 	TEST( matrixI.Pow(4) == matrixI );
 	TEST( matrixI.Pow(5) == matrixI );
-	
+
 	Flush("TestPow");
 }
 
+void TestAABB()
+{
+	Geometry::AxisAlignedBoundingBox< VectorN<int,2> >
+		aabb( uninitialised );
+
+	VectorN<int,2> p1({1,1});
+	aabb = p1;
+
+	TEST( aabb.Contains(p1) );
+	TEST( aabb.GetMinBound()==p1 );
+	TEST( aabb.GetMaxBound()==p1 );
+	TEST( aabb.GetCenter()==p1 );
+	TEST( aabb.GetAxisExtent(0)==0 );
+	TEST( aabb.GetVolume()==0 );
+	TEST( aabb.GetInradius()==0 );
+	TEST( aabb.GetIncenter()==p1 );
+	TEST( aabb.GetCircumradius()==0 );
+
+	VectorN<int,2> p2({2,2});
+	TEST( aabb.Contains(p2)==false );
+
+	Flush("TestAABB");
+}
+
 int main()
-{	
+{
 	TestLayout();
 	TestTranslate();
 	TestRotate();
@@ -298,14 +323,15 @@ int main()
 	TestTranspose();
 	TestMultiply();
 	TestPow();
-	
+	TestAABB();
+
 	// Geometry::MatrixN<int,4> matrix11({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 });
 	// in OGL format
 	// x.x x.y x.z 0
 	// y.x y.y y.z 0
 	// z.x z.y z.z 0
 	// p.x p.y p.z 1
-	
+
 	printf("=> %i failed%c\n", tests_failed, tests_failed==0 ? '!' : '.');
 	return tests_failed;
 }
