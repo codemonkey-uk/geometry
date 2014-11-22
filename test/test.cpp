@@ -291,6 +291,9 @@ void TestPow()
 	TEST( matrixI.Pow(4) == matrixI );
 	TEST( matrixI.Pow(5) == matrixI );
 
+	TEST( Pow(2,3)==8 );
+	TEST( Pow(5,5)==3125 );
+
 	Flush("TestPow");
 }
 

@@ -23,7 +23,7 @@ namespace Geometry
 		unsigned long op, res, one;
 		op = x;
 	    res = 0;
-		
+
 		one = 1 << 30;
 		while (one > op) one >>= 2;
 	    while (one != 0) {
@@ -41,7 +41,7 @@ namespace Geometry
 	{
 		return sinf(f);
 	}
-	
+
 	inline float Cos( float f )
 	{
 		return cosf(f);
@@ -51,8 +51,8 @@ namespace Geometry
 	{
 		return sin(d);
 	}
-	
-	inline float Cos( double d )
+
+	inline double Cos( double d )
 	{
 		return cos(d);
 	}
@@ -62,15 +62,44 @@ namespace Geometry
 		return abs(i);
 	}
 
-	inline int Abs( float f )
+	inline float Abs( float f )
 	{
 		return fabs(f);
 	}
 
-	inline int Abs( double d )
+	inline double Abs( double d )
 	{
 		return fabs(d);
 	}
+
+	inline double Pow( double b, double e )
+	{
+		return pow(b,e);
+	}
+
+	inline float Pow( float b, float e )
+	{
+		return pow(b,e);
+	}
+
+	inline int iPow( int b, int e )
+	{
+		int result = 1;
+		while (e)
+		{
+			if (e & 1)
+				result *= b;
+			e >>= 1;
+			b *= b;
+		}
+		return result;
+	}
+
+	inline int Pow( int b, int e )
+	{
+		return iPow(b,e);
+	}
 }
+
 
 #endif //BASIC_MATHS_HEADER_INCLUDED

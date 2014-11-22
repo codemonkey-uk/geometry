@@ -56,15 +56,11 @@ namespace Geometry
 		typedef typename AABB::VectorType Point;
 		typedef std::pair<int, int> Edge;
 
-		// pre-calculate the number of edges that will be produced
-		//int n = 1;
-		//for (int d=1;d!=Point::sDimensions;++d)
-		//	n += n*3;
-
 		// create temporary storage for the edges
 		std::vector< Point > corners;
+		corners.reserve( iPow( 2, Point::sDimensions ) );
+
 		std::vector< Edge > edges;
-		// edges.reserve(n);
 
 		const Point e( box.GetMaxBound() );
 		const Point o( box.GetMinBound() );
