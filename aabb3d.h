@@ -11,43 +11,43 @@ namespace Geometry
 {
     //
     // Interface
-    //    
-    
+    //
+
     template <typename Scalar>
     class AxisAlignedBoundingBox3d : public AxisAlignedBoundingBox< Vector3d<Scalar> >
     {
         public:
             typedef typename AxisAlignedBoundingBox< Vector3d<Scalar> >::VectorType VectorType;
-            AxisAlignedBoundingBox3d( const Uninitialised& ) 
-				: AxisAlignedBoundingBox< Vector3d<Scalar> >( uninitialised )
-			{ }
-			
-            AxisAlignedBoundingBox3d(const VectorType& minBound, const VectorType& maxBound)
-                : AxisAlignedBoundingBox< Vector3d<Scalar> >( minBound, maxBound ) 
+            AxisAlignedBoundingBox3d( const Uninitialised& )
+                : AxisAlignedBoundingBox< Vector3d<Scalar> >( uninitialised )
             { }
-            
+
+            AxisAlignedBoundingBox3d(const VectorType& minBound, const VectorType& maxBound)
+                : AxisAlignedBoundingBox< Vector3d<Scalar> >( minBound, maxBound )
+            { }
+
             typename VectorType::ScalarType GetWidth() const
             {
                 return this->GetAxisExtent(0);
             }
-            
+
             typename VectorType::ScalarType GetHeight() const
             {
                 return this->GetAxisExtent(1);
             }
-            
+
             typename VectorType::ScalarType GetDepth() const
             {
                 return this->GetAxisExtent(2);
             }
-			
-			AxisAlignedBoundingBox2d<Scalar> AxisAlignedBoundingBox2dXY()const
-			{
-				return AxisAlignedBoundingBox2d<Scalar>( 
-					this->GetMinBound().Vector2dXY(),
-					this->GetMaxBound().Vector2dXY()
-				);
-			}
+
+            AxisAlignedBoundingBox2d<Scalar> AxisAlignedBoundingBox2dXY()const
+            {
+                return AxisAlignedBoundingBox2d<Scalar>(
+                    this->GetMinBound().Vector2dXY(),
+                    this->GetMaxBound().Vector2dXY()
+                );
+            }
     };
 }
 
