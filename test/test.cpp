@@ -2,7 +2,11 @@
 #include "../matrixn.h"
 #include "../matrix4.h"
 #include "../vector3d.h"
+
 #include "../aabb.h"
+#include "../aabb_fn.h"
+
+#include <vector>
 
 using namespace Geometry;
 
@@ -290,6 +294,19 @@ void TestPow()
 	Flush("TestPow");
 }
 
+template< int n >
+void TestAABB_GatherEdges(int expect)
+{
+	Geometry::AxisAlignedBoundingBox< VectorN<int,n> >
+		aabb( uninitialised );
+
+	std::vector< LineN< VectorN<int,n> > > edges;
+	std::back_insert_iterator< std::vector< LineN< VectorN<int,n> > > > ii = std::back_inserter(edges);
+	Geometry::AABB_GatherEdges( aabb, ii );
+
+	TEST( edges.size()==expect );
+}
+
 void TestAABB()
 {
 	Geometry::AxisAlignedBoundingBox< VectorN<int,2> >
@@ -310,6 +327,10 @@ void TestAABB()
 
 	VectorN<int,2> p2({2,2});
 	TEST( aabb.Contains(p2)==false );
+
+	TestAABB_GatherEdges<1>(1);
+	TestAABB_GatherEdges<2>(4);
+	TestAABB_GatherEdges<3>(12);
 
 	Flush("TestAABB");
 }
