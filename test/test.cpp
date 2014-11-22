@@ -331,6 +331,7 @@ void TestAABB()
 	TestAABB_GatherEdges<1>(1);
 	TestAABB_GatherEdges<2>(4);
 	TestAABB_GatherEdges<3>(12);
+	TestAABB_GatherEdges<4>(12+12+8);
 
 	Flush("TestAABB");
 }
