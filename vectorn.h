@@ -103,6 +103,10 @@ namespace Geometry
         Scalar DotProduct( const VectorN& lhs, const VectorN& rhs );
 
         VectorN& reverse() { std::reverse(mData, mData+N); return *this; }
+
+        VectorN Swizzle( const VectorN<int, N>& swiz ) const;
+        VectorN<Scalar, N-1> Swizzle( const VectorN<int, N-1>& swiz ) const;
+
     private:
             Scalar mData[N];
     };
@@ -329,6 +333,29 @@ namespace Geometry
             result += lhs.mData[i] * rhs.mData[i];
         return result;
     }
+
+    template< typename Scalar, size_t N >
+    VectorN<Scalar,N> VectorN<Scalar,N>::Swizzle( const VectorN<int, N>& swiz ) const
+    {
+        VectorN result( uninitialised );
+        for (size_t n=0;n!=N;++n)
+        {
+            result[n] = this->Get(swiz[n]);
+        }
+        return result;
+    }
+
+    template< typename Scalar, size_t N >
+    VectorN<Scalar, N-1> VectorN<Scalar,N>::Swizzle( const VectorN<int, N-1>& swiz ) const
+    {
+        VectorN<Scalar, N-1> result( uninitialised );
+        for (size_t n=0;n!=N-1;++n)
+        {
+            result[n] = this->Get(swiz[n]);
+        }
+        return result;
+    }
+
 
     template< typename VectorType >
     class LineN

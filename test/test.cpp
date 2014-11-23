@@ -335,8 +335,22 @@ void TestAABB()
 	TestAABB_GatherEdges<2>(4);
 	TestAABB_GatherEdges<3>(12);
 	TestAABB_GatherEdges<4>(12+12+8);
+	TestAABB_GatherEdges<5>(80);
 
 	Flush("TestAABB");
+}
+
+void TestSwizzle()
+{
+	VectorN<int,2> v1a({10,0});
+	VectorN<int,3> v1b({10,0,20});
+	VectorN<int,2> v2({1,0});
+	VectorN<int,2> v3({0,10});
+
+	TEST( v1a.Swizzle( v2 ) == v3 );
+	TEST( v1b.Swizzle( v2 ) == v3 );
+
+	Flush("TestSwizzle");
 }
 
 int main()
@@ -349,6 +363,7 @@ int main()
 	TestMultiply();
 	TestPow();
 	TestAABB();
+	TestSwizzle();
 
 	// Geometry::MatrixN<int,4> matrix11({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 });
 	// in OGL format
