@@ -2,6 +2,7 @@
 #define GEOMETRY_AABB_H_INCLUDED_
 
 #include <math.h>
+#include <algorithm> // for max/min
 #include "geometry_uninitialised.h"
 
 namespace Geometry
@@ -54,6 +55,28 @@ namespace Geometry
         protected:
             VectorType mA,mB;
     };
+
+    //
+    // Free-functions
+    //
+
+    // Intersection (like a set intersection),
+    // returns an AABB that covers the overlap of a and b
+    template< typename VectorType >
+    Geometry::AxisAlignedBoundingBox< VectorType > Intersection(
+        const Geometry::AxisAlignedBoundingBox< VectorType >& a,
+        const Geometry::AxisAlignedBoundingBox< VectorType >& b
+    )
+    {
+        VectorType c(Geometry::uninitialised),d(Geometry::uninitialised);
+        for (int i=0;i!=VectorType::sDimensions;++i)
+        {
+            c[i] = std::max(a.GetMinBound()[i],b.GetMinBound()[i]);
+            d[i] = std::min(a.GetMaxBound()[i],b.GetMaxBound()[i]);
+        }
+
+        return Geometry::AxisAlignedBoundingBox< VectorType >(c,d);
+    }
 
     //
     // Class Implementation
