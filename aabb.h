@@ -17,6 +17,7 @@ namespace Geometry
             typedef T VectorType;
             typedef typename VectorType::ScalarType ScalarType;
             typedef typename VectorType::BaseType VectorBase;
+            const static size_t sDimensions = VectorBase::sDimensions;
 
             AxisAlignedBoundingBox(const VectorType& minBound, const VectorType& maxBound);
             AxisAlignedBoundingBox(const VectorType& origin);
@@ -51,6 +52,9 @@ namespace Geometry
 
             //compare sizes of AABBs
             bool CanContain( const AxisAlignedBoundingBox& rhs )const;
+
+            AxisAlignedBoundingBox Swizzle( const VectorN<int, sDimensions>& swiz ) const;
+            AxisAlignedBoundingBox< VectorN<ScalarType, sDimensions-1> > Swizzle( const VectorN<int, sDimensions-1>& swiz ) const;
 
         protected:
             VectorType mA,mB;
@@ -258,6 +262,31 @@ namespace Geometry
         }
         return true;
     }
+
+    template<typename T>
+    AxisAlignedBoundingBox<T>
+    AxisAlignedBoundingBox<T>::Swizzle(
+        const VectorN<int, AxisAlignedBoundingBox<T>::sDimensions>& swiz ) const
+    {
+        return AxisAlignedBoundingBox<T>(mA.Swizzle(swiz), mB.Swizzle(swiz));
+    }
+
+    // pretty horrible to read, so:
+    // This swizzle returns an axis aligned bounding box
+    // like this one, but with N-1 dimensions
+    template<typename T>
+    AxisAlignedBoundingBox<
+        VectorN<
+            typename AxisAlignedBoundingBox<T>::ScalarType,
+            AxisAlignedBoundingBox<T>::sDimensions-1
+        >
+    >
+    AxisAlignedBoundingBox<T>::Swizzle(
+        const VectorN<int, AxisAlignedBoundingBox<T>::sDimensions-1>& swiz ) const
+    {
+        return AxisAlignedBoundingBox< VectorN<AxisAlignedBoundingBox<T>::ScalarType, VectorBase::sDimensions-1> >(mA.Swizzle(swiz), mB.Swizzle(swiz));
+    }
+
 }
 
 #endif//GEOMETRY_AABB_H_INCLUDED_
