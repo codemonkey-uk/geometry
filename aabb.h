@@ -1,8 +1,10 @@
 #ifndef GEOMETRY_AABB_H_INCLUDED_
 #define GEOMETRY_AABB_H_INCLUDED_
 
-#include <cmath>
+#include <math.h>
 #include <algorithm>
+#include <type_traits>
+
 #include "geometry_uninitialised.h"
 
 namespace Geometry
@@ -143,7 +145,15 @@ namespace Geometry
         for (size_t d = 0; d!=VectorBase::sDimensions; ++d)
         {
             if (mA[d] > p[d]) mA[d] = p[d];
-            if (mB[d] < p[d]) mB[d] = p[d];
+            if (mB[d] <= p[d]) 
+            {
+                mB[d] = std::is_integral< typename VectorBase::ScalarType >::value
+                    ? p[d]+1
+                    : nextafter(
+                        p[d], 
+                        std::numeric_limits<typename VectorBase::ScalarType>::max()
+                    );
+            }
         }
     }
     

@@ -532,6 +532,19 @@ void TestAABB_Difference3d()
     TestAABB_Difference3d(c,a);
 }
 
+template< typename Scalar >
+void TestAABB_ExpandToContain()
+{
+	VectorN<Scalar,2> p1({1,1});
+	Geometry::AxisAlignedBoundingBox< VectorN<Scalar,2> >
+	    aabb(p1);
+	VectorN<Scalar,2> p2({2,2});
+
+	TEST( !aabb.Contains(p2) );
+	aabb.ExpandToContain(p2);
+	TEST( aabb.Contains(p2) );
+}
+
 void TestAABB()
 {
 	Geometry::AxisAlignedBoundingBox< VectorN<int,2> >
@@ -580,6 +593,10 @@ void TestAABB()
 
     TestAABB_Difference2d();
     TestAABB_Difference3d();
+    
+    TestAABB_ExpandToContain<int>();
+    TestAABB_ExpandToContain<float>();
+    TestAABB_ExpandToContain<double>();
     
 	Flush("TestAABB");
 }
