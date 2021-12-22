@@ -16,9 +16,9 @@ using namespace Geometry;
 
 int tests_passed = 0;
 int tests_failed = 0;
-#define TEST( condition ) if (!(condition)) { \
-	printf("failed: %s\n", #condition); tests_failed++; \
-	} else { tests_passed++; }
+#define TEST( condition ) [&]()->bool{ if (!(condition)) { \
+	printf("failed: %s\n", #condition); tests_failed++; return false; \
+	} else { tests_passed++; return true; } } ()
 
 void Flush(const char* name)
 {
@@ -354,8 +354,7 @@ void TestAABB_Difference2d(
     auto itr = std::back_inserter(r);
     AABB_Difference( a,b,itr );
     
-    TEST( r.size()==expected_count );
-    if (r.size()!=expected_count)
+    if (!TEST( r.size()==expected_count ))
     {
         printf("expected %i got %i:\n",expected_count,(int)r.size());
         DebugPrint(r);
@@ -364,8 +363,7 @@ void TestAABB_Difference2d(
     // check results are all contained by B
     for (const auto& rb:r)
     {
-        TEST(b.Contains(rb));
-        if (!b.Contains(rb))
+        if (!TEST(b.Contains(rb)))
         {
             DebugPrint(b);
             DebugPrint(rb);
@@ -376,8 +374,7 @@ void TestAABB_Difference2d(
     for (const auto& ra:r)
     {
         // no overlaps with original
-        TEST(a.Overlaps(ra)==false);
-        if (a.Overlaps(ra))
+        if (!TEST(a.Overlaps(ra)==false))
         {
             printf("Unexpected overlaps against A in difference set:\n");
             DebugPrint(a);
@@ -388,8 +385,7 @@ void TestAABB_Difference2d(
         {
             if (&ra!=&rb)
             {
-                TEST(ra.Overlaps(rb)==false);
-                if (ra.Overlaps(rb))
+                if (!TEST(ra.Overlaps(rb)==false))
                 {
                     printf("Unexpected overlaps in difference set:\n");
                     DebugPrint(ra);
@@ -493,8 +489,7 @@ void TestAABB_Difference3d( Geometry::AxisAlignedBoundingBox3d< int > a, Geometr
     for (const auto& ra:r)
     {
         // no overlaps with original
-        TEST(a.Overlaps(ra)==false);
-        if (a.Overlaps(ra))
+        if (!TEST(a.Overlaps(ra)==false))
         {
             printf("Unexpected overlaps against A in difference set:\n");
             DebugPrint(a);
@@ -505,8 +500,7 @@ void TestAABB_Difference3d( Geometry::AxisAlignedBoundingBox3d< int > a, Geometr
         {
             if (&ra!=&rb)
             {
-                TEST(ra.Overlaps(rb)==false);
-                if (ra.Overlaps(rb))
+                if (!TEST(ra.Overlaps(rb)==false))
                 {
                     printf("Unexpected overlaps in difference set:\n");
                     DebugPrint(ra);
