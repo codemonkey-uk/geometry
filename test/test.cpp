@@ -5,6 +5,7 @@
 
 #include "../aabb.h"
 #include "../aabb2d.h"
+#include "../aabb3d.h"
 #include "../aabb_fn.h"
 
 #include <vector>
@@ -59,14 +60,26 @@ void DebugPrint(Geometry::AxisAlignedBoundingBox2d< int > aabb)
     );
 }
 
-void DebugPrint(std::vector< Geometry::AxisAlignedBoundingBox2d< int > >& r)
+void DebugPrint(Geometry::AxisAlignedBoundingBox3d< int > aabb)
 {
-    for (auto aabb : r)
-    {
-        DebugPrint(aabb);
-    }
+    printf("AABB: %i,%i,%i->%i,%i,%i\n",
+        aabb.GetMinBound().GetX(),
+        aabb.GetMinBound().GetY(), 
+        aabb.GetMinBound().GetZ(), 
+        aabb.GetMaxBound().GetX(),
+        aabb.GetMaxBound().GetY(),
+        aabb.GetMaxBound().GetZ()
+    );
 }
 
+template < typename T >
+void DebugPrint(const std::vector< T >& r)
+{
+    for (const auto& e : r)
+    {
+        DebugPrint(e);
+    }
+}
 // --- TESTS ---
 
 void TestLayout()
@@ -330,22 +343,35 @@ void TestAABB_GatherEdges(int expect)
 	TEST( edges.size()==expect );
 }
 
+
 void TestAABB_Difference2d( 
     Geometry::AxisAlignedBoundingBox2d< int > a,
     Geometry::AxisAlignedBoundingBox2d< int > b,
-    int expected
+    int expected_count
 )
 {
     std::vector< Geometry::AxisAlignedBoundingBox2d< int > > r;
     auto itr = std::back_inserter(r);
     AABB_Difference( a,b,itr );
     
-    TEST( r.size()==expected );
-    if (r.size()!=expected)
+    TEST( r.size()==expected_count );
+    if (r.size()!=expected_count)
     {
-        printf("expected %i got %i:\n",expected,(int)r.size());
+        printf("expected %i got %i:\n",expected_count,(int)r.size());
         DebugPrint(r);
     }
+    
+    // check results are all contained by B
+    for (const auto& rb:r)
+    {
+        TEST(b.Contains(rb));
+        if (!b.Contains(rb))
+        {
+            DebugPrint(b);
+            DebugPrint(rb);
+        }
+    }
+    
     // no overlaps in results
     for (const auto& ra:r)
     {
@@ -372,7 +398,6 @@ void TestAABB_Difference2d(
             }
         }
     }
-        
 }
 
 void TestAABB_Difference2d_Same()
@@ -450,6 +475,61 @@ void TestAABB_Difference2d()
     TestAABB_Difference2d_BExtendsA2Axis();
 }
 
+void TestAABB_Difference3d()
+{
+    // x=10..12,y=10..12,z=10..12
+    Geometry::AxisAlignedBoundingBox3d< int >
+        a( {10,10,10},{12+1,12+1,12+1} );
+
+    TEST( a.GetVolume()==3*3*3 );
+    
+    // on x=11..13,y=11..13,z=11..13
+    Geometry::AxisAlignedBoundingBox3d< int >
+        b( {11,11,11},{13+1,13+1,13+1} );
+
+    TEST( b.GetVolume()==3*3*3 );
+    
+    std::vector< Geometry::AxisAlignedBoundingBox3d< int > > r;
+    auto itr = std::back_inserter(r);
+    AABB_Difference( a,b,itr );
+    
+    // DebugPrint(r);
+    
+    // check results are all contained by B
+    for (const auto& rb:r)
+    {
+        TEST(b.Contains(rb)==true);
+    }
+    
+    // no overlaps in results
+    for (const auto& ra:r)
+    {
+        // no overlaps with original
+        TEST(a.Overlaps(ra)==false);
+        if (a.Overlaps(ra))
+        {
+            printf("Unexpected overlaps against A in difference set:\n");
+            DebugPrint(a);
+            DebugPrint(ra);
+        }
+        
+        for (const auto& rb:r)
+        {
+            if (&ra!=&rb)
+            {
+                TEST(ra.Overlaps(rb)==false);
+                if (ra.Overlaps(rb))
+                {
+                    printf("Unexpected overlaps in difference set:\n");
+                    DebugPrint(ra);
+                    DebugPrint(rb);
+                }
+            }
+        }
+    }
+    
+}
+
 void TestAABB()
 {
 	Geometry::AxisAlignedBoundingBox< VectorN<int,2> >
@@ -497,6 +577,7 @@ void TestAABB()
 	TestAABB_GatherEdges<5>(80);
 
     TestAABB_Difference2d();
+    TestAABB_Difference3d();
     
 	Flush("TestAABB");
 }

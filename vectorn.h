@@ -106,6 +106,12 @@ namespace Geometry
 
         static 
         VectorN Lerp( Scalar fa, const VectorN& a, const VectorN& b );
+
+        static 
+        VectorN Min( const VectorN& a, const VectorN& b );
+
+        static 
+        VectorN Max( const VectorN& a, const VectorN& b );
         
     private:
             Scalar mData[N];
@@ -344,6 +350,26 @@ namespace Geometry
         for (size_t i=0;i<N;++i)
             result[i] = (a[i]*fa + b[i]*fb);
         return result;
+    }
+    
+    template< typename Scalar, size_t N >
+    VectorN<Scalar,N> VectorN<Scalar,N>::Min( const VectorN& a, const VectorN& b )
+    {
+        VectorN<Scalar,N> result( Geometry::uninitialised );
+        for (size_t i=0;i<N;++i)
+            result[i] = std::min(a[i], b[i]);
+        return result;
+        
+    }
+
+    template< typename Scalar, size_t N >
+    VectorN<Scalar,N> VectorN<Scalar,N>::Max( const VectorN& a, const VectorN& b )
+    {
+        VectorN<Scalar,N> result( Geometry::uninitialised );
+        for (size_t i=0;i<N;++i)
+            result[i] = std::max(a[i], b[i]);
+        return result;
+        
     }
 
     template< typename VT >

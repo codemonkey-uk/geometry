@@ -125,7 +125,16 @@ namespace Geometry
     template<typename T>
     bool AxisAlignedBoundingBox<T>::Contains( const AxisAlignedBoundingBox& rhs ) const
     {
-        return Contains(rhs.GetMinBound()) && Contains(rhs.GetMaxBound());
+        if (!Contains(rhs.GetMinBound())) return false;
+        
+        const VectorBase& p = rhs.GetMaxBound();
+        for (size_t d = 0; d!=VectorBase::sDimensions; ++d)
+        {
+            if ((mA[d] >= p[d]) || (mB[d] < p[d])) return false;
+        }
+
+        return true;
+        
     }    
 
     template<typename T>
