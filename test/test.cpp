@@ -4,6 +4,7 @@
 #include "../vector3d.h"
 
 #include "../aabb.h"
+#include "../aabb2d.h"
 #include "../aabb_fn.h"
 
 #include <vector>
@@ -47,6 +48,25 @@ void DebugPrint(const Geometry::MatrixN<double,4>& matrix)
 		printf("%lf,%lf,%lf,%lf\n", matrix[n][0],matrix[n][1],matrix[n][2],matrix[n][3]);
 	}
 }
+
+void DebugPrint(Geometry::AxisAlignedBoundingBox2d< int > aabb)
+{
+    printf("AABB: %i,%i->%i,%i\n",
+        aabb.GetMinBound().GetX(),
+        aabb.GetMinBound().GetY(), 
+        aabb.GetMaxBound().GetX(),
+        aabb.GetMaxBound().GetY()
+    );
+}
+
+void DebugPrint(std::vector< Geometry::AxisAlignedBoundingBox2d< int > >& r)
+{
+    for (auto aabb : r)
+    {
+        DebugPrint(aabb);
+    }
+}
+
 // --- TESTS ---
 
 void TestLayout()
@@ -310,6 +330,126 @@ void TestAABB_GatherEdges(int expect)
 	TEST( edges.size()==expect );
 }
 
+void TestAABB_Difference2d( 
+    Geometry::AxisAlignedBoundingBox2d< int > a,
+    Geometry::AxisAlignedBoundingBox2d< int > b,
+    int expected
+)
+{
+    std::vector< Geometry::AxisAlignedBoundingBox2d< int > > r;
+    auto itr = std::back_inserter(r);
+    AABB_Difference( a,b,itr );
+    
+    TEST( r.size()==expected );
+    if (r.size()!=expected)
+    {
+        printf("expected %i got %i:\n",expected,(int)r.size());
+        DebugPrint(r);
+    }
+    // no overlaps in results
+    for (const auto& ra:r)
+    {
+        // no overlaps with original
+        TEST(a.Overlaps(ra)==false);
+        if (a.Overlaps(ra))
+        {
+            printf("Unexpected overlaps against A in difference set:\n");
+            DebugPrint(a);
+            DebugPrint(ra);
+        }
+        
+        for (const auto& rb:r)
+        {
+            if (&ra!=&rb)
+            {
+                TEST(ra.Overlaps(rb)==false);
+                if (ra.Overlaps(rb))
+                {
+                    printf("Unexpected overlaps in difference set:\n");
+                    DebugPrint(ra);
+                    DebugPrint(rb);
+                }
+            }
+        }
+    }
+        
+}
+
+void TestAABB_Difference2d_Same()
+{
+    Geometry::AxisAlignedBoundingBox2d< int >
+        a( {0,0},{10,10} );
+    Geometry::AxisAlignedBoundingBox2d< int >
+        b( {0,0},{10,10} );
+
+    TestAABB_Difference2d(a,b,0);
+}
+
+void TestAABB_Difference2d_NoOverlap()
+{
+    Geometry::AxisAlignedBoundingBox2d< int >
+        a( {0,0},{2,2} );
+    Geometry::AxisAlignedBoundingBox2d< int >
+        b( {4,4},{8,8} );
+
+    TestAABB_Difference2d(a,b,1);
+}
+
+void TestAABB_Difference2d_AContainsB()
+{
+    Geometry::AxisAlignedBoundingBox2d< int >
+        a( {0,0},{10,10} );
+    Geometry::AxisAlignedBoundingBox2d< int >
+        b( {4,4},{8,8} );
+
+    TestAABB_Difference2d(a,b,0);
+}
+
+void TestAABB_Difference2d_BExtendsA1Axis()
+{
+    Geometry::AxisAlignedBoundingBox2d< int >
+        a( {0,0},{5,5} );
+    Geometry::AxisAlignedBoundingBox2d< int >
+        b( {0,0},{5,8} );
+
+    TestAABB_Difference2d(a,b,1);
+}
+
+void TestAABB_Difference2d_BExtendsA2Axis_Max()
+{
+    Geometry::AxisAlignedBoundingBox2d< int >
+        a( {0,0},{5,5} );
+    Geometry::AxisAlignedBoundingBox2d< int >
+        b( {0,0},{8,8} );
+
+    TestAABB_Difference2d(a,b,2);
+}
+
+void TestAABB_Difference2d_BExtendsA2Axis_Min()
+{
+    Geometry::AxisAlignedBoundingBox2d< int >
+        a( {0,0},{5,5} );
+    Geometry::AxisAlignedBoundingBox2d< int >
+        b( {-5,-5},{5,5} );
+
+    TestAABB_Difference2d(a,b,2);
+}
+
+void TestAABB_Difference2d_BExtendsA2Axis()
+{
+    TestAABB_Difference2d_BExtendsA2Axis_Max();
+    TestAABB_Difference2d_BExtendsA2Axis_Min();
+}
+
+void TestAABB_Difference2d()
+{
+    TestAABB_Difference2d_Same();
+    TestAABB_Difference2d_NoOverlap();
+    TestAABB_Difference2d_AContainsB();
+    TestAABB_Difference2d_BExtendsA1Axis();
+    TestAABB_Difference2d_BExtendsA2Axis();
+}
+
 void TestAABB()
 {
 	Geometry::AxisAlignedBoundingBox< VectorN<int,2> >
@@ -318,7 +458,8 @@ void TestAABB()
 	VectorN<int,2> p1({1,1});
 	aabb = p1;
 
-	TEST( aabb.Contains(p1) );
+    // a point volume has zero size so should contain nothing
+	TEST( aabb.Contains(p1)==false );
 	TEST( aabb.GetMinBound()==p1 );
 	TEST( aabb.GetMaxBound()==p1 );
 	TEST( aabb.GetCenter()==p1 );
@@ -330,6 +471,24 @@ void TestAABB()
 
 	VectorN<int,2> p2({2,2});
 	TEST( aabb.Contains(p2)==false );
+	
+	Geometry::AxisAlignedBoundingBox< VectorN<int,2> > aabb2(p1,p2);
+	TEST( aabb2.Contains(p1) );
+	TEST( aabb2.Contains(p2)==false );	
+	TEST( aabb2.GetMinBound()==p1 );
+	TEST( aabb2.GetMaxBound()==p2 );
+	TEST( aabb2.GetAxisExtent(0)==1 );
+	TEST( aabb2.GetVolume()==1 );
+
+	VectorN<int,2> p3({3,3});
+	Geometry::AxisAlignedBoundingBox< VectorN<int,2> > aabb3(p1,p3);
+	TEST( aabb3.Contains(p1) );
+	TEST( aabb3.Contains(p2) );	
+	TEST( aabb3.GetMinBound()==p1 );
+	TEST( aabb3.GetMaxBound()==p3 );
+	TEST( aabb3.GetAxisExtent(0)==2 );
+	TEST( aabb3.GetVolume()==4 );
+	
 
 	TestAABB_GatherEdges<1>(1);
 	TestAABB_GatherEdges<2>(4);
@@ -337,6 +496,8 @@ void TestAABB()
 	TestAABB_GatherEdges<4>(12+12+8);
 	TestAABB_GatherEdges<5>(80);
 
+    TestAABB_Difference2d();
+    
 	Flush("TestAABB");
 }
 

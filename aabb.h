@@ -116,7 +116,7 @@ namespace Geometry
     {
         for (size_t d = 0; d!=VectorBase::sDimensions; ++d)
         {
-            if ((mA[d] > p[d]) || (mB[d] < p[d])) return false;
+            if ((mA[d] > p[d]) || (mB[d] <= p[d])) return false;
         }
 
         return true;
@@ -219,7 +219,7 @@ namespace Geometry
     {
         for (size_t d = 0; d!=VectorBase::sDimensions; ++d)
         {
-            if (mA[d] > rhs.mB[d] || mB[d] < rhs.mA[d])
+            if (mA[d] >= rhs.mB[d] || mB[d] <= rhs.mA[d])
                 return false;
         }
         return true;

@@ -106,14 +106,14 @@ namespace Geometry
     {
         // nothing to do here
     }
-	
+
     template<typename Scalar>
-	Vector3d<Scalar>& Vector3d<Scalar>::operator = (const VectorN<Scalar, 3>& rhs)
-	{
-		this->BaseType::operator=(rhs);
-		return *this;
-	}
-	
+    Vector3d<Scalar>& Vector3d<Scalar>::operator = (const VectorN<Scalar, 3>& rhs)
+    {
+        this->BaseType::operator=(rhs);
+        return *this;
+    }
+
     template<typename Scalar>
     Scalar Vector3d<Scalar>::GetX() const
     {

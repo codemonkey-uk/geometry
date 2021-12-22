@@ -25,6 +25,7 @@ namespace Geometry
                         
             //upcast constructor
             explicit Vector2d( const VectorN<Scalar, 2>& rhs );
+            Vector2d& operator = (const VectorN<Scalar, 2>& rhs);
             
             //simple accessor functions
             //note !!! don't like non-const Scalar & Get but required by shaded_relief
@@ -65,6 +66,14 @@ namespace Geometry
         // nothing to do here
     }
     
+    template<typename Scalar>
+    Vector2d<Scalar>& Vector2d<Scalar>::operator = (const VectorN<Scalar, 2>& rhs)
+    {
+        this->BaseType::operator=(rhs);
+        return *this;
+    }
+
+
     template<typename Scalar>
     Scalar& Vector2d<Scalar>::GetX() 
     {

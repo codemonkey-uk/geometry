@@ -14,6 +14,18 @@ namespace Geometry
 		insertion_iterator& ii 
 	)
 	{
+	    // 1st handle 2 trivial cases
+	    
+	    // a contains b, nothing to do
+	    if (a.Contains(b)) return;
+	    
+	    // and b does not overlap a, return b untouched
+	    if (!b.Overlaps(a)) 
+	    {
+	        *ii++ = b;
+	        return;
+	    }
+	    
 		// for each dimention that this AABB exists in
 		AABB bb = b;
 		for(size_t d=0;d!=AABB::VectorType::sDimensions;++d)
@@ -26,7 +38,7 @@ namespace Geometry
 				*ii++ = result; 
 				typename AABB::VectorType newMin( bb.GetMinBound() );
 				newMin[d] = newMax[d];
-				bb.SetMinBound( newMin );			
+				bb.SetMinBound( newMin );
 			}
 		}
 		//assert( a.GetMinBound()==bb.GetMinBound() );
@@ -39,7 +51,7 @@ namespace Geometry
 				*ii++ = AABB( newMin, bb.GetMaxBound() );
 				typename AABB::VectorType newMax( bb.GetMaxBound() );
 				newMax[d] = newMin[d];
-				bb.SetMaxBound( newMax );			
+				bb.SetMaxBound( newMax );
 			}
 		}
 		//assert( a==bb );
@@ -86,7 +98,7 @@ namespace Geometry
         }
 
         // write all the edges to the output iterator
-        for (int e=0;e!=edges.size();++e)
+        for (size_t e=0;e!=edges.size();++e)
             *ii++ = LineN< Point >( corners[edges[e].first], corners[edges[e].second] );
     }
 
