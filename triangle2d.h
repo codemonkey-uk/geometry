@@ -42,25 +42,25 @@ namespace Geometry
     template <typename Scalar>
     Scalar Triangle2d<Scalar>::GetSurfaceArea() const
     {
-        return fabs ( Scalar(0.5) * ( 
-          this->mA.GetX() * ( this->mC.GetY() - this->mB.GetY() ) + 
-          this->mB.GetX() * ( this->mA.GetY() - this->mC.GetY() ) + 
-          this->mC.GetX() * ( this->mB.GetY() - this->mA.GetY() ) ) 
-        );
+        return Fabs (
+          this->GetA().GetX() * ( this->GetC().GetY() - this->GetB().GetY() ) +
+          this->GetB().GetX() * ( this->GetA().GetY() - this->GetC().GetY() ) + 
+          this->GetC().GetX() * ( this->GetB().GetY() - this->GetA().GetY() )
+        ) / 2;
     }
 
     template <typename Scalar>
     void Triangle2d<Scalar>::ComputeCircumCenter( typename Triangle2d<Scalar>::VectorType& result ) const
     {
-        const Scalar asq = ( this->mB.GetX() - this->mA.GetX() ) * ( this->mB.GetX() - this->mA.GetX() ) + ( this->mB.GetY() - this->mA.GetY() ) * ( this->mB.GetY() - this->mA.GetY() );
-        const Scalar csq = ( this->mC.GetX() - this->mA.GetX() ) * ( this->mC.GetX() - this->mA.GetX() ) + ( this->mC.GetY() - this->mA.GetY() ) * ( this->mC.GetY() - this->mA.GetY() );
+        const Scalar asq = ( this->GetB().GetX() - this->GetA().GetX() ) * ( this->GetB().GetX() - this->GetA().GetX() ) + ( this->GetB().GetY() - this->GetA().GetY() ) * ( this->GetB().GetY() - this->GetA().GetY() );
+        const Scalar csq = ( this->GetC().GetX() - this->GetA().GetX() ) * ( this->GetC().GetX() - this->GetA().GetX() ) + ( this->GetC().GetY() - this->GetA().GetY() ) * ( this->GetC().GetY() - this->GetA().GetY() );
         
-        const Scalar top1 =  ( this->mB.GetY() - this->mA.GetY() ) * csq - ( this->mC.GetY() - this->mA.GetY() ) * asq;
-        const Scalar top2 =  ( this->mB.GetX() - this->mA.GetX() ) * csq - ( this->mC.GetX() - this->mA.GetX() ) * asq;
-        const Scalar bot  =  ( this->mB.GetY() - this->mA.GetY() ) * ( this->mC.GetX() - this->mA.GetX() )  - ( this->mC.GetY() - this->mA.GetY() ) * ( this->mB.GetX() - this->mA.GetX() );
+        const Scalar top1 =  ( this->GetB().GetY() - this->GetA().GetY() ) * csq - ( this->GetC().GetY() - this->GetA().GetY() ) * asq;
+        const Scalar top2 =  ( this->GetB().GetX() - this->GetA().GetX() ) * csq - ( this->GetC().GetX() - this->GetA().GetX() ) * asq;
+        const Scalar bot  =  ( this->GetB().GetY() - this->GetA().GetY() ) * ( this->GetC().GetX() - this->GetA().GetX() )  - ( this->GetC().GetY() - this->GetA().GetY() ) * ( this->GetB().GetX() - this->GetA().GetX() );
         
-        result.SetX( this->mA.GetX() + 0.5E+00 * top1 / bot);
-        result.SetY( this->mA.GetY() - 0.5E+00 * top2 / bot);
+        result.SetX( this->GetA().GetX() + 0.5E+00 * top1 / bot);
+        result.SetY( this->GetA().GetY() - 0.5E+00 * top2 / bot);
     }
 
     template <typename Scalar>
@@ -74,15 +74,15 @@ namespace Geometry
     template <typename Scalar>
     Scalar Triangle2d<Scalar>::GetCircumRadius() const
     {
-        Scalar asq = sqrt ( ( this->mB.GetX() - this->mA.GetX() ) * ( this->mB.GetX() - this->mA.GetX() ) + ( this->mB.GetY() - this->mA.GetY() ) * ( this->mB.GetY() - this->mA.GetY() ) );
-        Scalar bsq = sqrt ( ( this->mC.GetX() - this->mB.GetX() ) * ( this->mC.GetX() - this->mB.GetX() ) + ( this->mC.GetY() - this->mB.GetY() ) * ( this->mC.GetY() - this->mB.GetY() ) );
-        Scalar csq = sqrt ( ( this->mA.GetX() - this->mC.GetX() ) * ( this->mA.GetX() - this->mC.GetX() ) + ( this->mA.GetY() - this->mC.GetY() ) * (this-> mA.GetY() - this->mC.GetY() ) );
+        Scalar asq = Sqrt ( ( this->GetB().GetX() - this->GetA().GetX() ) * ( this->GetB().GetX() - this->GetA().GetX() ) + ( this->GetB().GetY() - this->GetA().GetY() ) * ( this->GetB().GetY() - this->GetA().GetY() ) );
+        Scalar bsq = Sqrt ( ( this->GetC().GetX() - this->GetB().GetX() ) * ( this->GetC().GetX() - this->GetB().GetX() ) + ( this->GetC().GetY() - this->GetB().GetY() ) * ( this->GetC().GetY() - this->GetB().GetY() ) );
+        Scalar csq = Sqrt ( ( this->GetA().GetX() - this->GetC().GetX() ) * ( this->GetA().GetX() - this->GetC().GetX() ) + ( this->GetA().GetY() - this->GetC().GetY() ) * (this-> GetA().GetY() - this->GetC().GetY() ) );
         
         Scalar bot = ( asq + bsq + csq ) * ( - asq + bsq + csq ) * ( asq - bsq + csq ) * ( asq + bsq - csq );
         
         assert ( bot > 0 );
         
-        return asq * bsq * csq / sqrt ( bot );
+        return asq * bsq * csq / Sqrt ( bot );
     }
 
 }

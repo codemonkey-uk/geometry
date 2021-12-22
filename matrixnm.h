@@ -8,6 +8,7 @@
 
 #include <assert.h>
 #include <math.h>
+#include <initializer_list>
 
 namespace Geometry
 {

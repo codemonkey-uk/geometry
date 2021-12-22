@@ -67,11 +67,11 @@ namespace Geometry
         //  projection onto (P2-P1) has been subtracted.
         Scalar alpha = dot / ( base * base );
         
-        Scalar sa = this->mC.GetX() - this->mA.GetX() - alpha * ( this->mB.GetX() - this->mA.GetX() );
-        Scalar sb = this->mC.GetY() - this->mA.GetY() - alpha * ( this->mB.GetY() - this->mA.GetY() );
-        Scalar sc = this->mC.GetZ() - this->mA.GetZ() - alpha * ( this->mB.GetZ() - this->mA.GetZ() );
+        Scalar sa = this->GetC().GetX() - this->GetA().GetX() - alpha * ( this->GetB().GetX() - this->GetA().GetX() );
+        Scalar sb = this->GetC().GetY() - this->GetA().GetY() - alpha * ( this->GetB().GetY() - this->GetA().GetY() );
+        Scalar sc = this->GetC().GetZ() - this->GetA().GetZ() - alpha * ( this->GetB().GetZ() - this->GetA().GetZ() );
         
-        return Scalar(0.5) * base * sqrt ( sa * sa + sb * sb + sc * sc );
+        return base * Sqrt ( sa * sa + sb * sb + sc * sc ) / 2;
     }
 }    
 
