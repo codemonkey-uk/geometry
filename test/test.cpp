@@ -475,20 +475,8 @@ void TestAABB_Difference2d()
     TestAABB_Difference2d_BExtendsA2Axis();
 }
 
-void TestAABB_Difference3d()
+void TestAABB_Difference3d( Geometry::AxisAlignedBoundingBox3d< int > a, Geometry::AxisAlignedBoundingBox3d< int > b)
 {
-    // x=10..12,y=10..12,z=10..12
-    Geometry::AxisAlignedBoundingBox3d< int >
-        a( {10,10,10},{12+1,12+1,12+1} );
-
-    TEST( a.GetVolume()==3*3*3 );
-    
-    // on x=11..13,y=11..13,z=11..13
-    Geometry::AxisAlignedBoundingBox3d< int >
-        b( {11,11,11},{13+1,13+1,13+1} );
-
-    TEST( b.GetVolume()==3*3*3 );
-    
     std::vector< Geometry::AxisAlignedBoundingBox3d< int > > r;
     auto itr = std::back_inserter(r);
     AABB_Difference( a,b,itr );
@@ -527,7 +515,27 @@ void TestAABB_Difference3d()
             }
         }
     }
+}
+
+void TestAABB_Difference3d()
+{
+        // x=10..12,y=10..12,z=10..12
+    Geometry::AxisAlignedBoundingBox3d< int >
+        a( {10,10,10},{12+1,12+1,12+1} );
     
+    // on x=11..13,y=11..13,z=11..13
+    Geometry::AxisAlignedBoundingBox3d< int >
+        b( {11,11,11},{13+1,13+1,13+1} );
+
+    TestAABB_Difference3d(a,b);
+    TestAABB_Difference3d(b,a);
+    
+    // on x=11..13,y=11..13,z=11..13
+    Geometry::AxisAlignedBoundingBox3d< int >
+        c( {9,9,9},{11+1,11+1,11+1} );
+
+    TestAABB_Difference3d(a,c);
+    TestAABB_Difference3d(c,a);
 }
 
 void TestAABB()
