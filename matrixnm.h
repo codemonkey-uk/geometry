@@ -69,7 +69,8 @@ namespace Geometry
         //MatrixNM& operator *= (const Scalar rhs);
         bool operator == (const MatrixNM& rhs) const;
         bool operator != (const MatrixNM& rhs) const;
-
+        bool Equals (const MatrixNM& rhs, Scalar epsilon) const;
+        
         MatrixNM<Scalar,M, N> GetTranspose() const;
     // private:
             // Scalar mData[N*M];
@@ -229,6 +230,12 @@ namespace Geometry
     bool MatrixNM<Scalar, N, M>::operator != (const MatrixNM& rhs) const
     {
         return !(*this==rhs);
+    }
+    
+    template< typename Scalar, size_t N, size_t M >    
+    bool MatrixNM<Scalar, N, M>::Equals (const MatrixNM& rhs, Scalar epsilon) const
+    {
+        return mData.DistanceSquare( rhs.mData ) < epsilon;
     }
 
     template< typename Scalar, size_t N, size_t M >

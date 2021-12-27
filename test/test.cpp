@@ -80,6 +80,7 @@ void DebugPrint(const std::vector< T >& r)
         DebugPrint(e);
     }
 }
+
 // --- TESTS ---
 
 void TestLayout()
@@ -141,6 +142,36 @@ void TestRotate()
 	TEST( Matrix4<float>::RotationAroundZ(0) == Matrix4<float>::Identity() );
 	TEST( Matrix4<double>::RotationAroundZ(0) == Matrix4<double>::Identity() );
 
+    auto a = Matrix4<double>::Identity();
+    auto b = Matrix4<double>::RotationAround({0,0,1},0);
+    if (!TEST( a.Equals(b,0.001) ))
+    {
+        printf("Expected:\n");
+        DebugPrint( a );
+        printf("Got:\n");
+        DebugPrint( b );
+    }
+    
+    auto c = Matrix4<double>::RotationAroundX(Geometry::pi);
+    auto d = Matrix4<double>::RotationAround({1,0,0},Geometry::pi);
+    if (!TEST( c.Equals(d,0.001) ))
+    {
+        printf("Expected:\n");
+        DebugPrint( c );
+        printf("Got:\n");
+        DebugPrint( d );
+    }
+    
+    auto e = Matrix4<double>::RotationAroundY(Geometry::pi);
+    auto f = Matrix4<double>::RotationAround({0,1,0},Geometry::pi);
+    if (!TEST( e.Equals(f,0.001) ))
+    {
+        printf("Expected:\n");
+        DebugPrint( e );
+        printf("Got:\n");
+        DebugPrint( f );
+    }
+    
 	// TODO
 
 	// Negating the rotation angle is equivalent to generating the transpose of the matrix.
