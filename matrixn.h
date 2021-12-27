@@ -63,8 +63,8 @@ namespace Geometry
 
         MatrixN Pow(int i) const;
 
-        static MatrixN Translation(const VectorN<Scalar, N-1>& t);
-        void BecomeTranslation(const VectorN<Scalar, N-1>& t);
+        static MatrixN Translation(const VectorN<Scalar, N-1>& t, Scalar identity=1);
+        void BecomeTranslation(const VectorN<Scalar, N-1>& t, Scalar identity=1);
     };
 
     //
@@ -83,6 +83,19 @@ namespace Geometry
         }
         return r;
     }
+    
+    template<typename Scalar, size_t N>
+    VectorN<Scalar, N-1> operator* (const MatrixN<Scalar, N>& lhs, VectorN<Scalar, N-1> rhs)
+    {
+        VectorN<Scalar, N> a(uninitialised);
+        for(int n=0;n!=N-1;++n)
+            a[n]=rhs[n];
+        a[N-1]=1;
+        a = lhs*a;
+        for(int n=0;n!=N-1;++n)
+            rhs[n]=a[n];
+        return rhs;
+    }
 
     //
     // Member Functions
@@ -100,7 +113,7 @@ namespace Geometry
     template<typename Scalar, size_t N>
     void MatrixN<Scalar, N>::BecomeIdentity()
     {
-        int i=0;
+        unsigned int i=0;
         this->mData[i++]=1;
         while(i<N*N)
         {
@@ -164,29 +177,29 @@ namespace Geometry
 
     // static
     template<typename Scalar, size_t N>
-    MatrixN<Scalar, N> MatrixN<Scalar, N>::Translation(const VectorN<Scalar, N-1>& t)
+    MatrixN<Scalar, N> MatrixN<Scalar, N>::Translation(const VectorN<Scalar, N-1>& t, Scalar identity)
     {
         MatrixN result(uninitialised);
-        result.BecomeTranslation(t);
+        result.BecomeTranslation(t, identity);
         return result;
     }
 
     template<typename Scalar, size_t N>
-    void MatrixN<Scalar, N>::BecomeTranslation(const VectorN<Scalar, N-1>& t)
+    void MatrixN<Scalar, N>::BecomeTranslation(const VectorN<Scalar, N-1>& t, Scalar identity)
     {
         size_t i=0;
-        this->mData[i++]=1;
+        this->mData[i++]=identity;
         while(i<N*(N-1)-1)
         {
             for(size_t j=0;j!=N;++j)
                 this->mData[i++]=0;
-            this->mData[i++]=1;
+            this->mData[i++]=identity;
         }
 
         this->mData[i++]=0;
         for(size_t j=0;j!=N-1;++j)
             this->mData[i++]=t.Get(j);
-        this->mData[i++]=1;
+        this->mData[i++]=identity;
     }
 
 }//namespace Geometry

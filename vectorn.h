@@ -151,11 +151,11 @@ namespace Geometry
     template<typename Scalar, size_t N>
     VectorN<Scalar, N> operator- (VectorN<Scalar, N> arg)
     {
-            for(size_t i=0;i!=N;++i)
-            {
-                arg[i] = -arg[i];   
-            }
-            return arg;
+        for(size_t i=0;i!=N;++i)
+        {
+            arg[i] = -arg[i];   
+        }
+        return arg;
     }
     
     template<typename Scalar, size_t N>    
