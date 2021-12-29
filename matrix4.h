@@ -44,6 +44,11 @@ namespace Geometry
         Matrix4(std::initializer_list<Scalar> data)
             : BaseType(data)
         { }
+        
+        Matrix4( 
+            const VectorN<Scalar,3>& x, 
+            const VectorN<Scalar,3>& y, 
+            const VectorN<Scalar,3>& z);
 
         static Matrix4 RotationAroundX(Scalar r);
         void BecomeRotationAroundX(Scalar r);
@@ -74,6 +79,34 @@ namespace Geometry
     // Member Functions
     //
 
+    // basis vectors
+    template< typename Scalar>
+    Matrix4<Scalar>::Matrix4( 
+        const VectorN<Scalar,3>& x, 
+        const VectorN<Scalar,3>& y, 
+        const VectorN<Scalar,3>& z)
+    {
+        this->mData[ 0] = x[0];
+        this->mData[ 1] = x[1];
+        this->mData[ 2] = x[2];
+        this->mData[ 3] = 0;
+
+        this->mData[ 4] = y[0];
+        this->mData[ 5] = y[1];
+        this->mData[ 6] = y[2];
+        this->mData[ 7] = 0;
+
+        this->mData[ 8] = z[0];
+        this->mData[ 9] = z[1];
+        this->mData[10] = z[2];
+        this->mData[11] = 0;
+
+        this->mData[12] = 0;
+        this->mData[13] = 0;
+        this->mData[14] = 0;
+        this->mData[15] = 1;
+    }
+        
     // static
     template< typename Scalar>
     Matrix4<Scalar> Matrix4<Scalar>::RotationAroundX(Scalar r)
@@ -295,20 +328,20 @@ namespace Geometry
 
         const int x=0; const int y=1; const int z=2;    
         (*this)[0][0] = (axis[x] * axis[x] * k) + cosA;
-        (*this)[1][0] = (axis[y] * axis[x] * k) - axis[z]; 
-        (*this)[2][0] = (axis[z] * axis[x] * k) + axis[y];
-        (*this)[3][0] = 0;
-        (*this)[0][1] = (axis[x] * axis[y] * k) + axis[z];
-        (*this)[1][1] = (axis[y] * axis[y] * k) + cosA;
-        (*this)[2][1] = (axis[z] * axis[y] * k) - axis[x];
-        (*this)[3][1] = 0;
-        (*this)[0][2] = (axis[x] * axis[z] * k) - axis[y];
-        (*this)[1][2] = (axis[y] * axis[z] * k) + axis[x];
-        (*this)[2][2] = (axis[z] * axis[z] * k) + cosA;
-        (*this)[3][2] = 0;
+        (*this)[0][1] = (axis[y] * axis[x] * k) - axis[z]; 
+        (*this)[0][2] = (axis[z] * axis[x] * k) + axis[y];
         (*this)[0][3] = 0;
+        (*this)[1][0] = (axis[x] * axis[y] * k) + axis[z];
+        (*this)[1][1] = (axis[y] * axis[y] * k) + cosA;
+        (*this)[1][2] = (axis[z] * axis[y] * k) - axis[x];
         (*this)[1][3] = 0;
+        (*this)[2][0] = (axis[x] * axis[z] * k) - axis[y];
+        (*this)[2][1] = (axis[y] * axis[z] * k) + axis[x];
+        (*this)[2][2] = (axis[z] * axis[z] * k) + cosA;
         (*this)[2][3] = 0;
+        (*this)[3][0] = 0;
+        (*this)[3][1] = 0;
+        (*this)[3][2] = 0;
         (*this)[3][3] = 1;
     }
 
