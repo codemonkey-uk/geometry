@@ -656,6 +656,29 @@ void TestManhattan()
     Flush("TestManhattan");
 }
 
+void Test2dIntersection()
+{
+    Line2d<int> a (
+        Line2d<int>::VectorType{-10,-10},
+        Line2d<int>::VectorType{10,10}
+    );
+    Line2d<int> b (
+        Line2d<int>::VectorType{-10,0},
+        Line2d<int>::VectorType{10,0}
+    );
+    Line2d<int>::VectorType v{1,1};
+    TEST( a.Intersection(b,&v) == true );
+    TEST( v.GetX()==0 && v.GetY()==0 );
+
+    Line2d<int> c (
+        Line2d<int>::VectorType{100,100},
+        Line2d<int>::VectorType{200,200}
+    );
+    TEST( a.Intersection(c,&v) == false );
+    
+    Flush("Test2dIntersection");
+}
+
 int main()
 {
     TestLayout();
@@ -668,6 +691,7 @@ int main()
     TestAABB();
     TestSwizzle();
     TestManhattan();
+    Test2dIntersection();
     // Geometry::MatrixN<int,4> matrix11({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 });
     // in OGL format
     // x.x x.y x.z 0
