@@ -177,7 +177,43 @@ namespace Geometry
             VectorType ap(p - this->mStart);
             return (ab.GetX()*ap.GetY())-(ab.GetY()*ap.GetX());
         }
-	};
+        
+        // from Andre LeMothe's "Tricks of the Windows Game Programming Gurus"
+        // Returns 1 if the lines intersect, otherwise 0. In addition, if the lines 
+        // intersect the intersection point may be stored in the floats i_x and i_y.
+        bool Intersection(const Line2d& other, VectorType* result)
+        {
+            float p0_x = this->mStart.GetX();
+            float p0_y = this->mStart.GetY(); 
+            float p1_x = this->mFinish.GetX();
+            float p1_y = this->mFinish.GetY();
+            float p2_x = other.mStart.GetX();
+            float p2_y = other.mStart.GetY(); 
+            float p3_x = other.mFinish.GetX();
+            float p3_y = other.mFinish.GetY();
+            
+            float s1_x, s1_y, s2_x, s2_y;
+            s1_x = p1_x - p0_x;     s1_y = p1_y - p0_y;
+            s2_x = p3_x - p2_x;     s2_y = p3_y - p2_y;
+
+            float s, t;
+            s = (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / (-s2_x * s1_y + s1_x * s2_y);
+            t = ( s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y);
+
+            if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
+            {
+                // Collision detected
+                if (result != NULL)
+                {
+                    result->SetX( p0_x + (t * s1_x) );
+                    result->SetY( p0_y + (t * s1_y) );
+                }
+                return true;
+            }
+
+            return false; // No collision
+        }
+    };
 }
 
 #endif
