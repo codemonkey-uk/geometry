@@ -11,3 +11,7 @@
 *.lai
 *.la
 *.a
+
+# vscode build products
+*.dSYM
+test/test.out
